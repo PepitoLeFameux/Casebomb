@@ -38,13 +38,13 @@ int victoire=0;
 int perdu=0;
 
 int numero(float tension) {
-    if(tension<0.1){return 0;}
-    if(tension<0.3){return 5;}
-    if(tension<0.7){return 4;}
-    if(tension<1.5){return 3;}
-    if(tension<2.0){return 2;}
-    if(tension<3.0){return 1;}
-    else{return 9;}
+    if (tension<0.1) { return 0; }
+    if (tension<0.3) { return 5; }
+    if (tension<0.7) { return 4; }
+    if (tension<1.5) { return 3; }
+    if (tension<2.0) { return 2; }
+    if (tension<3.0) { return 1; }
+    else { return 9; }
 }
 
 //int i;
@@ -65,15 +65,15 @@ int llettres[]={0,0,0,0,0,0,0,0};
 int lvoyelles[]={0,0,0,0,0,0,0,0};
 int lconsonnes[]={0,0,0,0,0,0,0,0};
 int lettres;
-int voyelles;
-int consonnes;
+int voyelles;//? pas utilise
+int consonnes;//? pas utilise
 
 char code[]="00000000";
 // valeur des 3 LED
 int NSA;
 int MSA;
 int FRK;
-//pin des 3 LED
+// pin des 3 LED
 int ledNSA=11;
 int ledMSA=10;
 int ledFRK=9;
@@ -105,7 +105,7 @@ void creecode(){
         } else {
             lchiffres[i]=1;
             chiffres++;
-            if(n%2==0){
+            if (n%2==0){
                 lpair[i]=1;
                 pair++;
             } else {
@@ -117,9 +117,9 @@ void creecode(){
 }
 
 int condE4(){
-    if(pasbranche(5)==1){return 5;}
-    if(pasbranche(1)==1){return 1;}
-    else{ return 0; }
+    if (pasbranche(5)==1) { return 5; }
+    if (pasbranche(1)==1) { return 1; }
+    else { return 0; }
 }
 
 // possibillite de completement enleve les "un","deux",...
@@ -141,6 +141,16 @@ int chiffreE4(){
     if(trois==0){ return 3; }
     if(quatre==0){ return 4; }
     if(cinq==0){ return 5; }
+}
+
+int remplacechiffreE4() {
+    for(i=0;i<5;i++) {
+        if      (combinaison[i]==1) { return 1; }
+        else if (combinaison[i]==2) { return 2; }
+        else if (combinaison[i]==3) { return 3; }
+        else if (combinaison[i]==4) { return 4; }
+        else if (combinaison[i]==5) { return 5; }
+    }
 }
 
 int dans(char num[], char liste[]){

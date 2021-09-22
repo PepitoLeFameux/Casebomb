@@ -37,19 +37,18 @@ int erreur=0;
 int victoire=0;
 int perdu=0;
 
-int numero(float tension)
-{
-  if(tension<0.1){return 0;}
-  if(tension<0.3){return 5;}
-  if(tension<0.7){return 4;}
-  if(tension<1.5){return 3;}
-  if(tension<2.0){return 2;}
-  if(tension<3.0){return 1;}
-  else{return 9;}
+int numero(float tension) {
+    if(tension<0.1){return 0;}
+    if(tension<0.3){return 5;}
+    if(tension<0.7){return 4;}
+    if(tension<1.5){return 3;}
+    if(tension<2.0){return 2;}
+    if(tension<3.0){return 1;}
+    else{return 9;}
 }
 
-int i;
-int n;
+//int i;
+//int n;
 
 // initialisation des variables
 int resultats[]={0,0,0,0,0};
@@ -58,9 +57,9 @@ int combinaison[]={0,0,0,0,0};
 int lchiffres[]={0,0,0,0,0,0,0,0};
 int lpair[]={0,0,0,0,0,0,0,0};
 int limpair[]={0,0,0,0,0,0,0,0};
-int impair;//?
-int pair;//?
-int chiffres;//?
+int impair;//? pas utilise
+int pair;//? pas utilise
+int chiffres;//? pas utilise
 
 int llettres[]={0,0,0,0,0,0,0,0};
 int lvoyelles[]={0,0,0,0,0,0,0,0};
@@ -80,44 +79,40 @@ int ledMSA=10;
 int ledFRK=9;
 
 int checkErreur() {
-  for(i=0;i<5;i++) {
-    if( !(resultats[i]==combinaison[i]) ){ return 1; }
-  }
-  return 0;
+    for(i=0;i<5;i++) {
+        if( !(resultats[i]==combinaison[i]) ){ return 1; }
+    }
+    return 0;
 }
 
-
+int n;
 void creecode(){
     for(i=0;i<8;i++){
-      n=random()%36;
-      code[i]="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[n];
-
-      if(0<=n && n<=25){
-        llettres[i]=1;
-        lettres++;
-
-        if(n==0 || n==4 || n==8 || n==14 || n==20 || n==24){
-          lvoyelles[i]=1;
-          voyelles++;
+        n=random()%36;
+        code[i]="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[n];
+  
+        if (0<=n && n<=25){
+            llettres[i]=1;
+            lettres++;
+    
+            if(n==0 || n==4 || n==8 || n==14 || n==20 || n==24){
+                lvoyelles[i]=1;
+                voyelles++;
+            } else {
+                lconsonnes[i]=1;
+                consonnes++;
+            }
+        } else {
+            lchiffres[i]=1;
+            chiffres++;
+            if(n%2==0){
+                lpair[i]=1;
+                pair++;
+            } else {
+                limpair[i]=1;
+                impair++;
+            }
         }
-
-        else{
-          lconsonnes[i]=1;
-          consonnes++;
-        }
-      }
-      else{
-        lchiffres[i]=1;
-        chiffres++;
-        if(n%2==0){
-          lpair[i]=1;
-          pair++;
-        }
-        else{
-          limpair[i]=1;
-          impair++;
-        }
-      }
     }
 }
 
@@ -149,17 +144,17 @@ int chiffreE4(){
 }
 
 int dans(char num[], char liste[]){
-  for(i=0;i<8;i++){
-    if(liste[i]==num[0]){return 1;}
-  }
-  return 0;
+    for(i=0;i<8;i++){
+      if(liste[i]==num[0]){return 1;}
+    }
+    return 0;
 }
 
 int cdans(int num, int liste[]){
-  for(i=0;i<8;i++){
-    if(liste[i]==num){return 1;}
-  }
-  return 0;
+    for(i=0;i<8;i++){
+        if(liste[i]==num){return 1;}
+    }
+    return 0;
 }
 
 int pasbranche(int n){
@@ -168,51 +163,50 @@ int pasbranche(int n){
 }
 
 int addition(){
-  int add=0;
-  for(i=0;i<5;i++){
-    if(combinaison[i]==0){ add=add+i+1 ;}
-  }
+    int add=0;
+    for(i=0;i<5;i++){
+        if(combinaison[i]==0){ add=add+i+1 ;}
+    }
 }
 
 int libre(){
-  int lib=0;
-  for(i=0;i<5;i++){
-    if(combinaison[i]==0){lib++;}
-  }
-  return lib;
+    int lib=0;
+    for(i=0;i<5;i++){
+        if(combinaison[i]==0){lib++;}
+    }
+    return lib;
 }
               
 void gencombinaison() {
-  if( lchiffres[2]==1 ){ combinaison[0]=4 ;}
-  else if( NSA==1 && llettres[6]==1 ){ combinaison[0]=3 ;}
-  else if( dans("2",code)==1 ){ combinaison[0]=5 ;}
-  else { combinaison[0]=4 ;}
-
-  if( MSA==1 ){ combinaison[1]=1 ;}
-  else if( lettres>=4 && pasbranche(3)==1 ){ combinaison[1]=3 ;}
-  else if( dans("2",code)==1 && dans("4",code)==1 && pasbranche(5)==1 ){ combinaison[1]=5 ;}
-  else { combinaison[1]=2 ;}
-
-  if( pasbranche(5)==1 && dans("V",code) ){ combinaison[2]=5 ;}
-  else if( pasbranche(1)==1 && lettres>=5 ){ combinaison[2]=1 ;}
-  else if( llettres[3]=="1" && lchiffres[6]=="1" && pasbranche(2)==1 ){ combinaison[2]=2 ;}
-  else if( pasbranche(3)==1 ){ combinaison[2]=3 ;}
-  else { combinaison[2]=0 ;}
-
-  if( dans("D",code) && dans("E",code) && pasbranche(4)==1 ){ combinaison[3]=4 ;}
-  else if( FRK==1 && MSA==1 && pasbranche(2)==1 ){ combinaison[3]=2 ;}
-  else if( addition()>=7 && pasbranche(1)==1 ){ combinaison[3]=1 ;}
-  else if( dans("0",code)==1 && dans("5",code)==1 && pasbranche(5) ){ combinaison[3]=5 ;}
-  else { combinaison[3]=0 ;}
-
-  if( libre()>2 ){ combinaison[4]=0 ;}
-  else if( cdans(1,combinaison)==1 && cdans(3,combinaison)==1 && cdans(5,combinaison)==1 ){ combinaison[4]=4 ;}
-  else if( condE4()==1 || condE4()==5 ){ combinaison[4]=condE4() ;}
-  else if( dans("B",code)==1 && dans("P",code)==1 ){ combinaison[4]=chiffreE4() ;}
-
+    if( lchiffres[2]==1 ){ combinaison[0]=4 ;}
+    else if( NSA==1 && llettres[6]==1 ){ combinaison[0]=3 ;}
+    else if( dans("2",code)==1 ){ combinaison[0]=5 ;}
+    else { combinaison[0]=4 ;}
+  
+    if( MSA==1 ){ combinaison[1]=1 ;}
+    else if( lettres>=4 && pasbranche(3)==1 ){ combinaison[1]=3 ;}
+    else if( dans("2",code)==1 && dans("4",code)==1 && pasbranche(5)==1 ){ combinaison[1]=5 ;}
+    else { combinaison[1]=2 ;}
+  
+    if( pasbranche(5)==1 && dans("V",code) ){ combinaison[2]=5 ;}
+    else if( pasbranche(1)==1 && lettres>=5 ){ combinaison[2]=1 ;}
+    else if( llettres[3]=="1" && lchiffres[6]=="1" && pasbranche(2)==1 ){ combinaison[2]=2 ;}
+    else if( pasbranche(3)==1 ){ combinaison[2]=3 ;}
+    else { combinaison[2]=0 ;}
+  
+    if( dans("D",code) && dans("E",code) && pasbranche(4)==1 ){ combinaison[3]=4 ;}
+    else if( FRK==1 && MSA==1 && pasbranche(2)==1 ){ combinaison[3]=2 ;}
+    else if( addition()>=7 && pasbranche(1)==1 ){ combinaison[3]=1 ;}
+    else if( dans("0",code)==1 && dans("5",code)==1 && pasbranche(5) ){ combinaison[3]=5 ;}
+    else { combinaison[3]=0 ;}
+  
+    if( libre()>2 ){ combinaison[4]=0 ;}
+    else if( cdans(1,combinaison)==1 && cdans(3,combinaison)==1 && cdans(5,combinaison)==1 ){ combinaison[4]=4 ;}
+    else if( condE4()==1 || condE4()==5 ){ combinaison[4]=condE4() ;}
+    else if( dans("B",code)==1 && dans("P",code)==1 ){ combinaison[4]=chiffreE4() ;}
 }
 
-// fonction execute au lancement du programme
+// fonction qui s'execute au lancement du programme
 void setup() {  
     lcd.begin(16,2);
     lcd.setRGB(colorR, colorG, colorB);
@@ -239,9 +233,6 @@ void setup() {
     digitalWrite(51,HIGH);
     delay(10);
     digitalWrite(51,LOW);
-  
-  
-  
     
     pinMode(bouton,INPUT);
     pinMode(cable1,INPUT);
@@ -260,8 +251,8 @@ void setup() {
 
     while(erreur<3 && victoire==0) {
         while(analogRead(bouton)<800) {
-          perdu=digitalRead(40);
-          if(perdu==1){break;}
+            perdu=digitalRead(40);
+            if(perdu==1){break;}
         }
   
         if(perdu==1){break;}
@@ -312,14 +303,11 @@ void setup() {
             lcd.print("X");
             lcd.print("X");
         }
-         
         while(analogRead(bouton)>900) {
             perdu=digitalRead(40);
             if(perdu==1){break;}
         }
     }
-
-
     if (erreur==3 || perdu==1) {  
         colorR = 0;
         colorG = 0;

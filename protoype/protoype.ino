@@ -5,28 +5,34 @@
 // initialize the library by associating any needed LCD interface pin
 // with the arduino pin number it is connected to
 
+//utilite ? / c'est quoi ?
 int colorR = 255;                                    
 int colorG = 255;
 int colorB = 255;
 
+//ecran lcd
 rgb_lcd lcd; 
 
+//pin des cables
 int bouton=A8;
-int cable1=A0;
-int cable2=A1;
-int cable3=A2;
-int cable4=A3;
-int cable5=A4;
-float V1,V2,V3,V4,V5=0;
-//ordre des câbles à brancher
-//affiche 42069 si ok sinon 666
-unsigned int OK=42069;
-
 //cable1 2.50V
 //cable2 3.00V
 //cable3 4.10V
 //cable4 4.50V
 //cable5 4.7V
+int cable1=A0;
+int cable2=A1;
+int cable3=A2;
+int cable4=A3;
+int cable5=A4;
+
+float V1,V2,V3,V4,V5=0;
+
+//ordre des câbles à brancher
+//affiche 42069 si ok sinon 666
+unsigned int OK=42069;
+
+//variables d'etat du jeu
 int erreur=0;
 int victoire=0;
 int perdu=0;

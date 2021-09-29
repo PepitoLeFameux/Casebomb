@@ -217,7 +217,7 @@ void gencombinaison() {
 }
 
 // fonction qui s'execute au lancement du programme
-void setup() {  
+void setup() {
     lcd.begin(16,2);
     lcd.setRGB(colorR, colorG, colorB);
     lcd.setCursor(0,0);

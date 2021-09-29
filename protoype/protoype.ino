@@ -5,7 +5,7 @@
 // initialize the library by associating any needed LCD interface pin
 // with the arduino pin number it is connected to
 
-//utilite ? / c'est quoi ?
+//couleur écran code (pour la modifier en cours de route éventuellement
 int colorR = 255;                                    
 int colorG = 255;
 int colorB = 255;
@@ -37,6 +37,7 @@ int erreur = 0;
 int victoire = 0;
 int perdu = 0;
 
+// permet d'associer une tension au numéro du cable branché
 int numero(float tension) {
     if (tension < 0.1) { return 0; }
     if (tension < 0.3) { return 5; }
@@ -51,22 +52,24 @@ int numero(float tension) {
 //int n;
 
 // initialisation des variables
-int resultats[] = {0,0,0,0,0};
-int combinaison[] = {0,0,0,0,0};
+int resultats[] = {0,0,0,0,0}; //combinaison rentrée
+int combinaison[] = {0,0,0,0,0}; //combinaison correcte
 
+// les arrays comme lpair représentent la position des nombres impairs dans le code
+// par exemple lvoyelles[]={0,0,1,0} indique un une voyalle en 3eme position dans le code
 int lchiffres[] = {0,0,0,0,0,0,0,0};
 int lpair[] = {0,0,0,0,0,0,0,0};
 int limpair[] = {0,0,0,0,0,0,0,0};
-int impair;//? pas utilise
-int pair;//? pas utilise
-int chiffres;//? pas utilise
+int impair;
+int pair;
+int chiffres;
 
 int llettres[] = {0,0,0,0,0,0,0,0};
 int lvoyelles[] = {0,0,0,0,0,0,0,0};
 int lconsonnes[] = {0,0,0,0,0,0,0,0};
 int lettres;
-int voyelles;//? pas utilise
-int consonnes;//? pas utilise
+int voyelles;
+int consonnes;
 
 char code[] = "00000000";
 // valeur des 3 LED
@@ -78,6 +81,7 @@ int ledNSA = 11;
 int ledMSA = 10;
 int ledFRK = 9;
 
+//compare la combinaison correcte à la combinaison rentrée, renvoie 1 en cas d'erreur, 0 sinon
 int checkErreur() {
     for(i = 0; i < 5; i++) {
         if (resultats[i] != combinaison[i]) { return 1; }
@@ -85,6 +89,7 @@ int checkErreur() {
     return 0;
 }
 
+//génère le code et remplit les critères comme le nombre de voyelles, les nombres impairs...
 int n;
 void creecode(){
     for (i = 0; i < 8; i++){
@@ -153,13 +158,15 @@ int remplace_chiffreE4() {
     }
 }
 
-int dans(char num[], char liste[]){
+//cherche la présence d'un caractère dans une liste
+int dans(char lettre[], char liste[]){
     for (i = 0; i < 8; i++) {
-      if (liste[i] == num[0]) { return 1; }
+      if (liste[i] == lettre[0]) { return 1; }
     }
     return 0;
 }
 
+//cherche la présence d'un chiffre dans une liste
 int cdans(int num, int liste[]) {
     for (i = 0; i < 8; i++){
         if (liste[i] == num) { return 1; }
@@ -167,11 +174,13 @@ int cdans(int num, int liste[]) {
     return 0;
 }
 
+//renvoie 1 si le cable n n'est pas branché
 int pasbranche(int n) {
     if (cdans(n,combinaison) == 1) { return 0; }
     else { return 1; }
 }
 
+//
 int addition() {
     int add = 0;
     for (i = 0; i < 5; i++) {
@@ -186,7 +195,8 @@ int libre() {
     }
     return lib;
 }
-              
+
+//la combinaison correcte est générée grâce aux conditions aléatoires et aux règles du jeu
 void gencombinaison() {
     if (lchiffres[2] == 1 ) { combinaison[0] = 4; }
     else if (NSA == 1 && llettres[6] == 1 ) { combinaison[0] = 3; }
@@ -218,11 +228,14 @@ void gencombinaison() {
 
 // fonction qui s'execute au lancement du programme
 void setup() {  
+  //initialisation de l'écran et affichage 
     lcd.begin(16,2);
     lcd.setRGB(colorR, colorG, colorB);
     lcd.setCursor(0,0);
+  //debug si tu veux
     lcd.print("amogus");
-    
+
+  //génération aléatoire d'un site grâce à la tension instable au bornes d'un pin
     randomSeed(analogRead(9));
     NSA = random()%2;
     MSA = random()%2;
@@ -230,16 +243,20 @@ void setup() {
     pinMode(ledNSA,OUTPUT);
     pinMode(ledMSA,OUTPUT);
     pinMode(ledFRK,OUTPUT);
-    
+
+  //allume les LEDs qui sont activées
     if (NSA == 1) { analogWrite(ledNSA,30); }
     if (MSA == 1) { analogWrite(ledMSA,30); }
     if (FRK == 1) { analogWrite(ledFRK,30); }
-  
+
+  //communication foireuse entre les arduinos
     pinMode(51,OUTPUT);
     pinMode(53,INPUT);
     
     creecode();   
     gencombinaison();
+    
+  //envoie un signal à l'arduino 2
     digitalWrite(51,HIGH);
     delay(10);
     digitalWrite(51,LOW);
@@ -250,50 +267,68 @@ void setup() {
     pinMode(cable3,INPUT);
     pinMode(cable4,INPUT);
     pinMode(cable5,INPUT);
-  
+
+  //affiche le code erreur
     lcd.print(code);
     lcd.setCursor(0,1);
+  //affiche la combinaison correcte (debug)
     lcd.print(combinaison[0]);
     lcd.print(combinaison[1]);
     lcd.print(combinaison[2]);
     lcd.print(combinaison[3]);
     lcd.print(combinaison[4]);
 
+  //la partie se joue tant que erreur<3 et pas victoire
     while (erreur < 3 && victoire == 0) {
+
+    //attente de l'appui du bouton (maintenu)
         while (analogRead(bouton) < 800) {
+          
+          //vérifie en boucle que l'arudino 2 n'a pas envoyé de signal
             perdu = digitalRead(40);
             if (perdu == 1) { break; }
         }
-  
+
+    //si jamais le joueur a perdu, quiite la boucle
         if (perdu == 1) { break; }
+
+    //mesure la tension aux bornes de chaque cable
         float V1 = analogRead(cable1)*5.0/1023.0;
         float V2 = analogRead(cable2)*5.0/1023.0;
         float V3 = analogRead(cable3)*5.0/1023.0;
         float V4 = analogRead(cable4)*5.0/1023.0;
         float V5 = analogRead(cable5)*5.0/1023.0;
+
+    //et leur attribue un numéro
         resultats[0] = numero(V1);
         resultats[1] = numero(V2);
         resultats[2] = numero(V3);
         resultats[3] = numero(V4);
         resultats[4] = numero(V5);
-        
+
+
+    //affiche la combinaison encore (debug)
         lcd.setCursor(0,1);
         lcd.print(combinaison[0]);
         lcd.print(combinaison[1]);
         lcd.print(combinaison[2]);
         lcd.print(combinaison[3]);
         lcd.print(combinaison[4]);
-        
+
+     //place le curseur  juste après le code
         lcd.setCursor(6,1);
-  
+
+     //cherche si la combinaison rentrée comporte une erreur
         if (checkErreur() == 1) { erreur++; }
         else { victoire = 1; }
         
         if (erreur == 1) {
+        //la couleur vire vers le rouge
           colorR = 255;
           colorG = 171;
           colorB = 0;
           lcd.setRGB(colorR, colorG, colorB);
+        //affiche une grosse croix
           lcd.setCursor(11,0);
           lcd.print("X");
           lcd.print("X");
@@ -302,10 +337,12 @@ void setup() {
           lcd.print("X");
         }
         if (erreur == 2) {
+        //la couleur vire encore
             colorR = 226;
             colorG = 53;
             colorB = 0;
             lcd.setRGB(colorR, colorG, colorB);
+        //affiche une deuxième grosse croix
             lcd.setCursor(14,0);
             lcd.print("X");
             lcd.print("X");
@@ -313,11 +350,18 @@ void setup() {
             lcd.print("X");
             lcd.print("X");
         }
+
+      //attend le relâchement du bouton pour continuer
         while (analogRead(bouton) > 900) {
+
+          //vérifie en boucle que l'arudino 2 n'a pas envoyé de signal
             perdu = digitalRead(40);
             if (perdu == 1) { break; }
         }
     }
+
+
+  //en fin de partie, si perdu(comtpe à rebours) ou 3 erreurs
     if (erreur == 3 || perdu == 1) {
         colorR = 0;
         colorG = 0;
@@ -327,13 +371,18 @@ void setup() {
         lcd.print("     Perdu      ");
         lcd.setCursor(0,1);
         lcd.print(" Recommencer ?  ");
-    } else {
+    }
+    
+  //sinon victoire
+    else {
         lcd.setCursor(0,0);
         lcd.print("  Desamorcage   ");
         lcd.setCursor(0,1);
         lcd.print("    Reussi      ");
     }
-    
+
+
+  //coupe le signal envoyé vers l'arduino 2
     digitalWrite(51,LOW);
 }
 

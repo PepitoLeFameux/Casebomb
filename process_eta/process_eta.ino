@@ -15,7 +15,7 @@ void Module4() {
 }
 
 void setup() {
-  randomSeed(analogRead(0));
+  randomSeed(analogRead(9));
   //initialisation du system général
   // I2C ?
   //initialisation des modules principaux (times et autres si nécessaire)
@@ -28,7 +28,7 @@ int seed;
 void loop() {
     seed = random(10) % 3;
     while (!module_finished) {
-        switch (true) {
+        switch (seed) {
             case 0 : {
                 Module1();
                 break;

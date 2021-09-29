@@ -227,8 +227,12 @@ void gencombinaison() {
 }
 
 // fonction qui s'execute au lancement du programme
+<<<<<<< HEAD
 void setup() {  
   //initialisation de l'écran et affichage 
+=======
+void setup() {
+>>>>>>> fd0e8d793a97d25e9a1e55cbc554d2f212901efc
     lcd.begin(16,2);
     lcd.setRGB(colorR, colorG, colorB);
     lcd.setCursor(0,0);

@@ -13,20 +13,29 @@ void Module3() {
 void Module4() {
     
 }
+void Module5() {
+    
+}
+void Module6() {
+    
+}
 
 void setup() {
-  randomSeed(analogRead(9));
-  //initialisation du system général
-  // I2C ?
-  //initialisation des modules principaux (times et autres si nécessaire)
+    randomSeed(analogRead(9));
+    //initialisation du system général
+    // I2C ?
+    //initialisation des modules principaux (times et autres si nécessaire)
 }
 
 int state = 0;
 bool module_finished = false;
 
-int seed;
+int last_seed = -1;
 void loop() {
-    seed = random(10) % 3;
+    int seed = random(10) % 6;
+    while (seed == last_seed) {
+        seed = random(10) % 6;
+    }
     while (!module_finished) {
         switch (seed) {
             case 0 : {
@@ -45,9 +54,18 @@ void loop() {
                 Module4();
                 break;
             }
+            case 4 : {
+                Module4();
+                break;
+            }
+            case 5 : {
+                Module4();
+                break;
+            }
             default: { break; }
         }
     }
+    last_seed = seed;
     module_finished = false;
     state++;
 }

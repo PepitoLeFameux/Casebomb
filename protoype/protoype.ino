@@ -279,7 +279,8 @@ void setup() {
 
   //la partie se joue tant que erreur<3 et pas victoire
     while (erreur < 3 && victoire == 0) {
-
+        // le joueur intéragie avec les cables 
+        // il appui pour "confirmer" son/ses choix
     //attente de l'appui du bouton (maintenu)
         while (analogRead(bouton) < 800) {
           

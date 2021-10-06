@@ -180,7 +180,7 @@ int pasbranche(int n) {
     else { return 1; }
 }
 
-//
+// ?????????
 int addition() {
     int add = 0;
     for (i = 0; i < 5; i++) {

@@ -1,38 +1,39 @@
-#include <Wire.h>                                            // appel des bibliotheques
-#include "rgb_lcd.h"
+// #include <Wire.h>                                            // appel des bibliotheques
+// #include "rgb_lcd.h"
 #define A10 , A11
 
 //ecran lcd
 rgb_lcd lcd; 
 
 //assignation des pins des composants
-int bouton = A8;
+const int bouton = A8;
 //cables
-int cable1 = A0;// 2.50V
-int cable2 = A1;// 3.00V
-int cable3 = A2;// 4.10V
-int cable4 = A3;// 4.50V
-int cable5 = A4;// 4.70V
-int list_cables[] = [cable1, cable2, cable3, cable4, cable5];
+const int cable1 = A0;// 2.50V
+const int cable2 = A1;// 3.00V
+const int cable3 = A2;// 4.10V
+const int cable4 = A3;// 4.50V
+const int cable5 = A4;// 4.70V
+const int list_cables[] = [cable1, cable2, cable3, cable4, cable5];
 // LED
-int ledNSA = 11;// pinledNSA
-int ledMSA = 10;
-int ledFRK = 9;
+const int ledNSA = 11;// pinledNSA
+const int ledMSA = 10;
+const int ledFRK = 9;
 // arduino
-int ardui_in = 53;
-int ardui_out = 51;
-int ardui_clock = 40;
+const int ardui_in = 53;
+const int ardui_out = 51;
+const int ardui_clock = 40;
 
 // // valeur des 3 LED
 // int NSA;// ledNSA
 // int MSA;
 // int FRK;
+
 void init_lcd() {
     // initialisation lcd avec test
     lcd.begin(16,2);
-    lcd.setRGB(colorR, colorG, colorB);
+    lcd.setRGB(255, 255, 255);
     lcd.setCursor(0,0);
-  //debug si tu veux
+    //debug si tu veux
     lcd.print("amogus");
 }
 
@@ -42,31 +43,50 @@ void init_leds() {
     NSA = random()%2;
     MSA = random()%2;
     FRK = random()%2;
-    pinMode(ledNSA,OUTPUT);
-    pinMode(ledMSA,OUTPUT);
-    pinMode(ledFRK,OUTPUT);
 
   //allume les LEDs qui sont activées
-    if (NSA == 1) { analogWrite(ledNSA,30); }
-    if (MSA == 1) { analogWrite(ledMSA,30); }
-    if (FRK == 1) { analogWrite(ledFRK,30); }
+    if (NSA == 1) { analogWrite(ledNSA, 30); }
+    if (MSA == 1) { analogWrite(ledMSA, 30); }
+    if (FRK == 1) { analogWrite(ledFRK, 30); }
 }
 
 void init_pins() {
-    
     //communication foireuse entre les arduinos
-    pinMode(ardui_out,OUTPUT);
-    pinMode(ardui_in,INPUT);
+    pinMode(ardui_out, OUTPUT);
+    pinMode(ardui_in, INPUT);
     
-    pinMode(bouton,INPUT);
-    pinMode(cable1,INPUT);
-    pinMode(cable2,INPUT);
-    pinMode(cable3,INPUT);
-    pinMode(cable4,INPUT);
-    pinMode(cable5,INPUT);
+    //bouton module cables/principale
+    pinMode(bouton, INPUT);
+
+    //cables module cables
+    pinMode(cable1, INPUT);
+    pinMode(cable2, INPUT);
+    pinMode(cable3, INPUT);
+    pinMode(cable4, INPUT);
+    pinMode(cable5, INPUT);
+
+    // les 3 LED principales
+    pinMode(ledNSA, OUTPUT);
+    pinMode(ledMSA, OUTPUT);
+    pinMode(ledFRK, OUTPUT);
 }
 
+void lcd_sur_2ligne(int pos, char msg[]) {
+    for (int i = 0; i < 2; i ++) {
+        lcd.setCursor(pos, i);
+        for (int j = 0; j < 2; j ++) {
+                lcd.print(msg);
+        }
+    }
+}
 
+//compare la combinaison correcte à la combinaison rentrée, renvoie 1 en cas d'erreur, 0 sinon
+int checkErreur() {
+    for(int i = 0; i < 5; i++) {
+        if (resultats[i] != combinaison[i]) { return 1; }
+    }
+    return 0;
+}
 
 void setup() {
     // randomSeed(analogRead(9));
@@ -74,18 +94,17 @@ void setup() {
     // I2C ?
     //initialisation des modules principaux (times et autres si nécessaire)
 
+    init_pins();
     init_lcd();
     init_leds();
-    init_pins()
 
-    
     creecode();   
     gencombinaison();
     
-  //envoie un signal à l'arduino 2
-    digitalWrite(ardui_out,HIGH);
+    //envoie un signal à l'arduino 2
+    digitalWrite(ardui_out, HIGH);
     delay(10);
-    digitalWrite(ardui_out,LOW);
+    digitalWrite(ardui_out, LOW);
     
     //affiche le code erreur
     lcd.print(code);
@@ -112,10 +131,9 @@ void setup() {
         // assignation des valeurs de chaque port en fonction du branchement des cables 
         lcd.setCursor(0,1);
         for (int i = 0; i < 5; i ++) {
-            //list_cables[i]
-            float voltage = analogRead(list_cables[i]) * 5.0 / 1023.0;//mesure le voltage de chaque port 
-            resultats[i] = numero(voltage);//assigne un numéro au port en fonction du voltage du cables qui lui est branché
-            lcd.print(combinaison[i]);//affiche les résultats attendus //debug
+            float voltage = analogRead(list_cables[i]) * 5.0 / 1023.0;// mesure le voltage de chaque port 
+            resultats[i] = numero(voltage);// assigne un numéro au port en fonction du voltage du cables qui lui est branché
+            lcd.print(combinaison[i]);// affiche les résultats attendus //debug
         }
 
         //place le curseur  juste après le code
@@ -125,14 +143,6 @@ void setup() {
         if (checkErreur() == 1) { erreur++; }
         else { victoire = 1; }
         
-        void lcd_sur_2ligne(int pos, [char] msg) {
-            for (int i = 0; i < 2; i ++) {
-                lcd.setCursor(pos, i);
-                for (int j = 0; j < 2; j ++) {
-                        lcd.print(msg);
-                }
-            }
-        }
 
         if (erreur == 1) {// le joueur se trompe 1 fois
             lcd.setRGB(255, 171, 0);//lcd en "jaune"
@@ -153,14 +163,6 @@ void setup() {
             if (perdu == 1) { break; }
         }
     }
-    /*
-void printlcd((int,int) pose, ([char], [char]) characts) {
-    lcd.setCursor(pose.0, pose.1);
-    for(int i = 0; i > charats.len(); i++) {
-        lcd.print(characts[i]);
-    } 
-}
-*/
 
     //en fin de partie, si perdu(compte à rebours) ou 3 erreurs
     if (erreur == 3 || perdu == 1) {
@@ -171,16 +173,14 @@ void printlcd((int,int) pose, ([char], [char]) characts) {
         lcd.print(" Recommencer ?  ");
     }
     
-  //sinon victoire
+    //sinon victoire
     else {
         lcd.setCursor(0,0);
         lcd.print("  Desamorcage   ");
         lcd.setCursor(0,1);
         lcd.print("    Reussi      ");
     }
-
-
-  //coupe le signal envoyé vers l'arduino 2
+    //coupe le signal envoyé vers l'arduino 2
     digitalWrite(ardui_out,LOW);
 }
 

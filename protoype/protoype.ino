@@ -41,7 +41,7 @@ int perdu = 0;
 int numero(float tension) {
     if (tension < 0.2) { return 0; }
     if (tension < 0.5) { return 5; }
-    if (tension < 1.1) { return 4; }
+    if (tension < 0.8) { return 4; }
     if (tension < 1.5) { return 3; }
     if (tension < 2.0) { return 2; }
     if (tension < 4.0) { return 1; }

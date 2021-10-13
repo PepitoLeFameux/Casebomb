@@ -1,3 +1,6 @@
+#include <Wire.h>                                            // appel des bibliotheques
+#include <Arduino.h>
+#include "rgb_lcd.h"
 
 rgb_lcd lcd;
 // const int LED_PIN = 8;

@@ -1,4 +1,5 @@
 #include <Wire.h>                                            // appel des bibliotheques
+#include <Arduino.h>
 #include "rgb_lcd.h"
 #include <Arduino.h>
 #define A10 , A11
@@ -440,37 +441,36 @@ void button_pressed() {
     //     perdu = digitalRead(ardui_clock);
     //     if (perdu == 1) { break; }
     // }
-    perdu = digitalRead(ardui_clock);
 
     //si jamais le joueur a perdu, quite la boucle
     if (perdu != 1) { 
 
-    // assignation des valeurs de chaque port en fonction du branchement des cables 
-    lcd.setCursor(0,1);
-    for (int i = 0; i < 5; i ++) {
-        float voltage = analogRead(list_cables[i]) * 5.0 / 1023.0;// mesure le voltage de chaque port 
-        resultats[i] = numero(voltage);// assigne un numéro au port en fonction du voltage du cables qui lui est branché
-        lcd.print(combinaison[i]);// affiche les résultats attendus //debug
-    }
+        // assignation des valeurs de chaque port en fonction du branchement des cables 
+        lcd.setCursor(0,1);
+        for (int i = 0; i < 5; i ++) {
+            float voltage = analogRead(list_cables[i]) * 5.0 / 1023.0;// mesure le voltage de chaque port 
+            resultats[i] = numero(voltage);// assigne un numéro au port en fonction du voltage du cables qui lui est branché
+            lcd.print(combinaison[i]);// affiche les résultats attendus //debug
+        }
 
-    //place le curseur  juste après le code
-    lcd.setCursor(6,1);
+        //place le curseur  juste après le code
+        lcd.setCursor(6,1);
 
-    //cherche si la combinaison rentrée comporte une erreur
-    if (checkErreur() == 1) { erreur++; }
-    else { victoire = 1; }
-    
+        //cherche si la combinaison rentrée comporte une erreur
+        if (checkErreur() == 1) { erreur++; }
+        else { victoire = 1; }
+        
 
-    if (erreur == 1) {// le joueur se trompe 1 fois
-        lcd.setRGB(255, 171, 0);//lcd en "jaune"
-        //affiche une grosse croix
-        lcd_sur_2ligne(11, "X");
-    }
-    if (erreur == 2) {// le joueur se trompe 2 fois
-        lcd.setRGB(226, 53, 0);//lcd en "rouge"
-        //affiche une deuxième grosse croix
-        lcd_sur_2ligne(14, "X");
-    }
+        if (erreur == 1) {// le joueur se trompe 1 fois
+            lcd.setRGB(255, 171, 0);//lcd en "jaune"
+            //affiche une grosse croix
+            lcd_sur_2ligne(11, "X");
+        }
+        if (erreur == 2) {// le joueur se trompe 2 fois
+            lcd.setRGB(226, 53, 0);//lcd en "rouge"
+            //affiche une deuxième grosse croix
+            lcd_sur_2ligne(14, "X");
+        }
     }
 
     // //attend le relâchement du bouton pour continuer
@@ -520,15 +520,26 @@ void Module1() {
     // unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
     // unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
     unsigned long previousMillis = 0;
+    unsigned long previousMillis2 = 0;
     unsigned long temps_ms; 
     const unsigned long interval = 500; // constante à 1000ms = 1s, ici 500ms
 
 
+            lcd.print("enter");
     //la partie se joue tant que erreur<3 et pas victoire
     while (erreur < 3 && victoire == 0) {
         temps_ms = millis();
     
         // digitalWrite(LED_PIN, ledState);
+        
+        perdu = digitalRead(ardui_clock);
+        
+        if(temps_ms - previousMillis2 >= interval) {
+            // button_pressed();
+            // Serial.println("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
+            lcd.print("loop");
+            previousMillis2 = temps_ms;
+        }
         
         if (button_state) {
             if(temps_ms - previousMillis >= interval) {

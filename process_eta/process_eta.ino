@@ -7,6 +7,7 @@ rgb_lcd lcd;
 
 //assignation des pins des composants
 const int bouton = A8;
+int button_state = false;
 //cables
 const int cable1 = A0;// 2.50V
 const int cable2 = A1;// 3.00V
@@ -510,45 +511,62 @@ void Module1() {
 
     // // Variables will change:
     // int ledState = HIGH;         // the current state of the output pin
-    int buttonState;             // the current reading from the input pin
-    int lastButtonState = LOW;   // the previous reading from the input pin
+    // int buttonState;             // the current reading from the input pin
+    // int lastButtonState = LOW;   // the previous reading from the input pin
 
-    // // the following variables are unsigned longs because the time, measured in
-    // // milliseconds, will quickly become a bigger number than can be stored in an int.
-    unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
-    unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
+    // // // the following variables are unsigned longs because the time, measured in
+    // // // milliseconds, will quickly become a bigger number than can be stored in an int.
+    // unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
+    // unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
+    unsigned long previousMillis = 0;
+    unsigned long temps_ms; 
+    const unsigned long interval = 500; // constante à 1000ms = 1s, ici 500ms
 
 
     //la partie se joue tant que erreur<3 et pas victoire
     while (erreur < 3 && victoire == 0) {
-        int reading = digitalRead(bouton);
-
-        // check to see if you just pressed the button
-        // (i.e. the input went from LOW to HIGH), and you've waited long enough
-        // since the last press to ignore any noise:
-
-        // If the switch changed, due to noise or pressing:
-        if (reading != lastButtonState) {
-            // reset the debouncing timer
-            lastDebounceTime = millis();
-        }
-
-        if ((millis() - lastDebounceTime) > debounceDelay) {
-            // whatever the reading is at, it's been there for longer than the debounce
-            // delay, so take it as the actual current state:
-
-            // if the button state has changed:
-            if (reading != buttonState) {
-                buttonState = reading;
-
-                // only toggle the LED if the new button state is HIGH
-                if (buttonState == HIGH) {
-                    // ledState = !ledState;
-                    // check_button_pressed();
-                    button_pressed();
-                }
+        temps_ms = millis();
+    
+        // digitalWrite(LED_PIN, ledState);
+        
+        if (button_state) {
+            if(temps_ms - previousMillis >= interval) {
+                button_pressed();
+                // Serial.println("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
             }
+            previousMillis = temps_ms;
         }
+        // if(temps_ms - previousMillis >= interval) {
+        //     // Serial.println("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
+        // }
+        // int reading = digitalRead(bouton);
+
+        // // check to see if you just pressed the button
+        // // (i.e. the input went from LOW to HIGH), and you've waited long enough
+        // // since the last press to ignore any noise:
+
+        // // If the switch changed, due to noise or pressing:
+        // if (reading != lastButtonState) {
+        //     // reset the debouncing timer
+        //     lastDebounceTime = millis();
+        // }
+
+        // if ((millis() - lastDebounceTime) > debounceDelay) {
+        //     // whatever the reading is at, it's been there for longer than the debounce
+        //     // delay, so take it as the actual current state:
+
+        //     // if the button state has changed:
+        //     if (reading != buttonState) {
+        //         buttonState = reading;
+
+        //         // only toggle the LED if the new button state is HIGH
+        //         if (buttonState == HIGH) {
+        //             // ledState = !ledState;
+        //             // check_button_pressed();
+        //             button_pressed();
+        //         }
+        //     }
+        // }
 
         // set the LED:
         // digitalWrite(ledPin, ledState);
@@ -599,11 +617,20 @@ int state = 0;
 
 int last_seed = -1;
 
+void button_press() {
+    button_state = true;
+}
+void button_unpress() {
+    button_state = false;
+}
+
 void setup() { 
     lcd.begin(16,2);
     lcd.setRGB(50,50,50);
     lcd.setCursor(0,0);
     randomSeed(analogRead(9));
+    attachInterrupt(digitalPinToInterrupt(button), button_press, RISING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
+    attachInterrupt(digitalPinToInterrupt(button), button_unpress, FALLING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
 }
 
 void loop() {

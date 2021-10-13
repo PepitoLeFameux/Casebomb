@@ -14,7 +14,7 @@ int colorB = 80;
 rgb_lcd lcd; 
 
 //pin des cables
-int bouton = 18;
+int bouton = A8;
 //cable1 2.50V
 //cable2 3.00V
 //cable3 4.10V
@@ -39,8 +39,8 @@ int perdu = 0;
 
 // permet d'associer une tension au numéro du cable branché
 int numero(float tension) {
-    if (tension < 0.2) { return 0; }
-    if (tension < 0.25) { return 5; }
+    if (tension < 0.25) { return 0; }
+    if (tension < 0.35) { return 5; }
     if (tension < 0.8) { return 4; }
     if (tension < 1.2) { return 3; }
     if (tension < 2.1) { return 2; }

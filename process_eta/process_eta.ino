@@ -18,15 +18,38 @@ const int list_cables[] = [cable1, cable2, cable3, cable4, cable5];
 const int ledNSA = 11;// pinledNSA
 const int ledMSA = 10;
 const int ledFRK = 9;
+const int list_LEDs[] = [ledNSA, ledMSA, ledFRK];
 // arduino
 const int ardui_in = 53;
 const int ardui_out = 51;
 const int ardui_clock = 40;
 
+// initialisation des variables
+int resultats[] = {0,0,0,0,0}; //combinaison rentrée
+int combinaison[] = {0,0,0,0,0}; //combinaison correcte
+
+// les arrays comme lpair représentent la position des nombres impairs dans le code
+// par exemple lvoyelles[]={0,0,1,0} indique un une voyalle en 3eme position dans le code
+int lchiffres[] = {0,0,0,0,0,0,0,0};
+// int lpair[] = {0,0,0,0,0,0,0,0};
+// int limpair[] = {0,0,0,0,0,0,0,0};
+int chiffres;
+// int impair;
+// int pair;
+
+int llettres[] = {0,0,0,0,0,0,0,0};
+// int lvoyelles[] = {0,0,0,0,0,0,0,0};
+// int lconsonnes[] = {0,0,0,0,0,0,0,0};
+int lettres;
+// int voyelles;
+// int consonnes;
+
+char code[] = "00000000";
 // // valeur des 3 LED
-// int NSA;// ledNSA
-// int MSA;
-// int FRK;
+int value_NSA;// ledNSA
+int value_MSA;
+int value_FRK;
+int list_value_LED[] = [0, 0, 0];//(WIP) [value_NSA, value_MSA, value_FRK]
 
 void init_lcd() {
     // initialisation lcd avec test
@@ -40,14 +63,19 @@ void init_lcd() {
 void init_leds() {
     //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
     randomSeed(analogRead(9));
-    NSA = random()%2;
-    MSA = random()%2;
-    FRK = random()%2;
+    // value_NSA = random()%2;
+    // value_MSA = random()%2;
+    // value_FRK = random()%2;
 
   //allume les LEDs qui sont activées
-    if (NSA == 1) { analogWrite(ledNSA, 30); }
-    if (MSA == 1) { analogWrite(ledMSA, 30); }
-    if (FRK == 1) { analogWrite(ledFRK, 30); }
+    // if (value_NSA == 1) { analogWrite(ledNSA, 30); }
+    // if (value_MSA == 1) { analogWrite(ledMSA, 30); }
+    // if (value_FRK == 1) { analogWrite(ledFRK, 30); }
+    for (int i = 0; i < 3; i ++) {//list_LEDs[i]
+        list_value_LED[i] = random()%2;
+        if (list_value_LED[i] == 1) { analogWrite(list_LEDs[i], 30); }
+
+    }
 }
 
 void init_pins() {
@@ -69,6 +97,17 @@ void init_pins() {
     pinMode(ledNSA, OUTPUT);
     pinMode(ledMSA, OUTPUT);
     pinMode(ledFRK, OUTPUT);
+}
+
+// permet d'associer une tension au numéro du cable branché
+int numero(float tension) {
+    if (tension < 0.1) { return 0; }
+    if (tension < 0.3) { return 5; }
+    if (tension < 0.7) { return 4; }
+    if (tension < 1.5) { return 3; }
+    if (tension < 2.0) { return 2; }
+    if (tension < 3.0) { return 1; }
+    else { return 9; }
 }
 
 void lcd_sur_2ligne(int pos, char msg[]) {

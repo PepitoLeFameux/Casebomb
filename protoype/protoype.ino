@@ -254,10 +254,6 @@ void gencombinaison() {
 }
 
 
-
-
-
-
 // fonction qui s'execute au lancement du programme
 void setup() {
     Serial.begin(9600);

@@ -1,5 +1,5 @@
-#include <Wire.h>                                            // appel des bibliotheques
-#include "rgb_lcd.h"
+// #include <Wire.h>                                            // appel des bibliotheques
+// #include "rgb_lcd.h"
 #define A10 , A11
 
 //ecran lcd
@@ -48,6 +48,7 @@ int llettres[] = {0,0,0,0,0,0,0,0};
 int lettres;
 // int voyelles;
 // int consonnes;
+bool module_finished = false;
 
 char code[] = "00000000";
 //variables d'etat du jeu
@@ -479,6 +480,7 @@ void Module1() {
     digitalWrite(ardui_out,LOW);
     module_finished = true;
 }
+
 void Module2() {
     
 }
@@ -496,7 +498,6 @@ void Module6() {
 }
 
 int state = 0;
-bool module_finished = false;
 
 int last_seed = -1;
 

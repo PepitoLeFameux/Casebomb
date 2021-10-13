@@ -14,7 +14,7 @@ int colorB = 80;
 rgb_lcd lcd; 
 
 //pin des cables
-int bouton = A8;
+int bouton = 18;
 //cable1 2.50V
 //cable2 3.00V
 //cable3 4.10V
@@ -40,11 +40,11 @@ int perdu = 0;
 // permet d'associer une tension au numéro du cable branché
 int numero(float tension) {
     if (tension < 0.2) { return 0; }
-    if (tension < 0.5) { return 5; }
+    if (tension < 0.25) { return 5; }
     if (tension < 0.8) { return 4; }
-    if (tension < 1.5) { return 3; }
-    if (tension < 2.0) { return 2; }
-    if (tension < 4.0) { return 1; }
+    if (tension < 1.2) { return 3; }
+    if (tension < 2.1) { return 2; }
+    if (tension < 4.5) { return 1; }
     else { return 9; }
 }
 
@@ -202,7 +202,7 @@ void gencombinaison() {
     //si chiffre en 3eme position -> branche au 4
     if (lchiffres[2] == 1 ) { combinaison[0] = 4; }
     //si NSA allumée et lettre en 7eme position -> branche au 3
-    else if (NSA == 1 || FRK == 1 && llettres[6] == 1 ) { combinaison[0] = 3; }
+    else if (NSA == 1 && llettres[6] == 1 ) { combinaison[0] = 3; }
     //si le code comporte un 2 -> branche au 5
     else if (dans("2",code) == 1 ) { combinaison[0] = 5; }
     //sinon branche au 4
@@ -302,11 +302,11 @@ void setup() {
     lcd.print(code);
     lcd.setCursor(0,1);
   //affiche la combinaison correcte (debug)
-    lcd.print(combinaison[0]);
-    lcd.print(combinaison[1]);
-    lcd.print(combinaison[2]);
-    lcd.print(combinaison[3]);
-    lcd.print(combinaison[4]);
+    //lcd.print(combinaison[0]);
+    //lcd.print(combinaison[1]);
+    //lcd.print(combinaison[2]);
+    //lcd.print(combinaison[3]);
+    //lcd.print(combinaison[4]);
 
   //la partie se joue tant que erreur<3 et pas victoire
     while (erreur < 3 && victoire == 0) {

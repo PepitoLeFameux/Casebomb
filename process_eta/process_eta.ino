@@ -8,7 +8,7 @@
 rgb_lcd lcd;
 
 //assignation des pins des composants
-const int bouton = A8;
+const int bouton = 2;
 int button_state = false;
 //cables
 const int cable1 = A0;// 2.50V
@@ -642,8 +642,8 @@ void setup() {
     lcd.begin(16,2);
     lcd.setRGB(50,50,50);
     lcd.setCursor(0,0);
-    randomSeed(analogRead(9));
-    attachInterrupt(digitalPinToInterrupt(bouton), button_press, CHANGE); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
+    randomSeed(analogRead(7));
+    attachInterrupt(digitalPinToInterrupt(bouton), button_press, RISING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
     // attachInterrupt(digitalPinToInterrupt(bouton), button_unpress, FALLING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
 }
 

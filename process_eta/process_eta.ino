@@ -383,6 +383,105 @@ void gencombinaison() {
     else if (dans("B",code) == 1 && dans("P",code) == 1) { combinaison[4] = chiffreE4(); }
 }
 
+// void check_button_pressed() {
+//     //attente de l'appui du bouton (maintenu)
+//     while (analogRead(bouton) < 800) {
+    
+//         //vérifie en boucle que l'arduino 2 n'a pas envoyé de signal de fin de timer
+//         perdu = digitalRead(ardui_clock);
+//         if (perdu == 1) { break; }
+//     }
+
+//     //si jamais le joueur a perdu, quite la boucle
+//     if (perdu == 1) { break; }
+
+//     // assignation des valeurs de chaque port en fonction du branchement des cables 
+//     lcd.setCursor(0,1);
+//     for (int i = 0; i < 5; i ++) {
+//         float voltage = analogRead(list_cables[i]) * 5.0 / 1023.0;// mesure le voltage de chaque port 
+//         resultats[i] = numero(voltage);// assigne un numéro au port en fonction du voltage du cables qui lui est branché
+//         lcd.print(combinaison[i]);// affiche les résultats attendus //debug
+//     }
+
+//     //place le curseur  juste après le code
+//     lcd.setCursor(6,1);
+
+//     //cherche si la combinaison rentrée comporte une erreur
+//     if (checkErreur() == 1) { erreur++; }
+//     else { victoire = 1; }
+    
+
+//     if (erreur == 1) {// le joueur se trompe 1 fois
+//         lcd.setRGB(255, 171, 0);//lcd en "jaune"
+//         //affiche une grosse croix
+//         lcd_sur_2ligne(11, "X");
+//     }
+//     if (erreur == 2) {// le joueur se trompe 2 fois
+//         lcd.setRGB(226, 53, 0);//lcd en "rouge"
+//         //affiche une deuxième grosse croix
+//         lcd_sur_2ligne(14, "X");
+//     }
+
+//     //attend le relâchement du bouton pour continuer
+//     while (analogRead(bouton) > 900) {
+    
+//         //vérifie en boucle que l'arudino 2 n'a pas envoyé de signal de fin de timer
+//         perdu = digitalRead(ardui_clock);
+//         if (perdu == 1) { break; }
+//     }
+// }
+
+
+void button_pressed() {
+    // //attente de l'appui du bouton (maintenu)
+    // while (analogRead(bouton) < 800) {
+    
+    //     //vérifie en boucle que l'arduino 2 n'a pas envoyé de signal de fin de timer
+    //     perdu = digitalRead(ardui_clock);
+    //     if (perdu == 1) { break; }
+    // }
+        perdu = digitalRead(ardui_clock);
+
+    //si jamais le joueur a perdu, quite la boucle
+    if (perdu == 1) { break; }
+
+    // assignation des valeurs de chaque port en fonction du branchement des cables 
+    lcd.setCursor(0,1);
+    for (int i = 0; i < 5; i ++) {
+        float voltage = analogRead(list_cables[i]) * 5.0 / 1023.0;// mesure le voltage de chaque port 
+        resultats[i] = numero(voltage);// assigne un numéro au port en fonction du voltage du cables qui lui est branché
+        lcd.print(combinaison[i]);// affiche les résultats attendus //debug
+    }
+
+    //place le curseur  juste après le code
+    lcd.setCursor(6,1);
+
+    //cherche si la combinaison rentrée comporte une erreur
+    if (checkErreur() == 1) { erreur++; }
+    else { victoire = 1; }
+    
+
+    if (erreur == 1) {// le joueur se trompe 1 fois
+        lcd.setRGB(255, 171, 0);//lcd en "jaune"
+        //affiche une grosse croix
+        lcd_sur_2ligne(11, "X");
+    }
+    if (erreur == 2) {// le joueur se trompe 2 fois
+        lcd.setRGB(226, 53, 0);//lcd en "rouge"
+        //affiche une deuxième grosse croix
+        lcd_sur_2ligne(14, "X");
+    }
+
+    // //attend le relâchement du bouton pour continuer
+    // while (analogRead(bouton) > 900) {
+    
+    //     //vérifie en boucle que l'arudino 2 n'a pas envoyé de signal de fin de timer
+    //     perdu = digitalRead(ardui_clock);
+    //     if (perdu == 1) { break; }
+    // }
+}
+
+
 void Module1() {
     
     // randomSeed(analogRead(9));
@@ -410,54 +509,54 @@ void Module1() {
         lcd.print(combinaison[i]);
     }
 
+    // // Variables will change:
+    // int ledState = HIGH;         // the current state of the output pin
+    int buttonState;             // the current reading from the input pin
+    int lastButtonState = LOW;   // the previous reading from the input pin
+
+    // // the following variables are unsigned longs because the time, measured in
+    // // milliseconds, will quickly become a bigger number than can be stored in an int.
+    unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
+    unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
+
+
     //la partie se joue tant que erreur<3 et pas victoire
     while (erreur < 3 && victoire == 0) {
+        int reading = digitalRead(bouton);
 
-        //attente de l'appui du bouton (maintenu)
-        while (analogRead(bouton) < 800) {
-        
-            //vérifie en boucle que l'arduino 2 n'a pas envoyé de signal de fin de timer
-            perdu = digitalRead(ardui_clock);
-            if (perdu == 1) { break; }
+        // check to see if you just pressed the button
+        // (i.e. the input went from LOW to HIGH), and you've waited long enough
+        // since the last press to ignore any noise:
+
+        // If the switch changed, due to noise or pressing:
+        if (reading != lastButtonState) {
+            // reset the debouncing timer
+            lastDebounceTime = millis();
         }
 
-        //si jamais le joueur a perdu, quite la boucle
-        if (perdu == 1) { break; }
+        if ((millis() - lastDebounceTime) > debounceDelay) {
+            // whatever the reading is at, it's been there for longer than the debounce
+            // delay, so take it as the actual current state:
 
-        // assignation des valeurs de chaque port en fonction du branchement des cables 
-        lcd.setCursor(0,1);
-        for (int i = 0; i < 5; i ++) {
-            float voltage = analogRead(list_cables[i]) * 5.0 / 1023.0;// mesure le voltage de chaque port 
-            resultats[i] = numero(voltage);// assigne un numéro au port en fonction du voltage du cables qui lui est branché
-            lcd.print(combinaison[i]);// affiche les résultats attendus //debug
+            // if the button state has changed:
+            if (reading != buttonState) {
+                buttonState = reading;
+
+                // only toggle the LED if the new button state is HIGH
+                if (buttonState == HIGH) {
+                    // ledState = !ledState;
+                    // check_button_pressed();
+                    button_pressed();
+                }
+            }
         }
 
-        //place le curseur  juste après le code
-        lcd.setCursor(6,1);
+        // set the LED:
+        // digitalWrite(ledPin, ledState);
 
-        //cherche si la combinaison rentrée comporte une erreur
-        if (checkErreur() == 1) { erreur++; }
-        else { victoire = 1; }
-        
-
-        if (erreur == 1) {// le joueur se trompe 1 fois
-            lcd.setRGB(255, 171, 0);//lcd en "jaune"
-            //affiche une grosse croix
-            lcd_sur_2ligne(11, "X");
-        }
-        if (erreur == 2) {// le joueur se trompe 2 fois
-            lcd.setRGB(226, 53, 0);//lcd en "rouge"
-            //affiche une deuxième grosse croix
-            lcd_sur_2ligne(14, "X");
-        }
-
-        //attend le relâchement du bouton pour continuer
-        while (analogRead(bouton) > 900) {
-        
-            //vérifie en boucle que l'arudino 2 n'a pas envoyé de signal de fin de timer
-            perdu = digitalRead(ardui_clock);
-            if (perdu == 1) { break; }
-        }
+        // save the reading. Next time through the loop, it'll be the lastButtonState:
+        // lastButtonState = reading;
+        // check_button_pressed();
     }
 
     //en fin de partie, si perdu(compte à rebours) ou 3 erreurs

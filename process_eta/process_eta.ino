@@ -1,5 +1,5 @@
-// #include <Wire.h>                                            // appel des bibliotheques
-// #include "rgb_lcd.h"
+#include <Wire.h>                                            // appel des bibliotheques
+#include "rgb_lcd.h"
 #define A10 , A11
 
 //ecran lcd
@@ -61,8 +61,6 @@ void init_lcd() {
     lcd.begin(16,2);
     lcd.setRGB(127, 127, 127);
     lcd.setCursor(0,0);
-    //debug si tu veux
-    lcd.print("amogus");
 }
 
 void init_leds() {
@@ -602,10 +600,8 @@ int last_seed = -1;
 
 void setup() { 
     lcd.begin(16,2);
-    lcd.setRGB(255, 255, 255);
+    lcd.setRGB(50,50,50);
     lcd.setCursor(0,0);
-  //debug si tu veux
-    lcd.print("amogus");
     randomSeed(analogRead(9));
 }
 

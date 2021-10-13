@@ -441,7 +441,7 @@ void button_pressed() {
         perdu = digitalRead(ardui_clock);
 
     //si jamais le joueur a perdu, quite la boucle
-    if (perdu == 1) { break; }
+    if (perdu != 1) { 
 
     // assignation des valeurs de chaque port en fonction du branchement des cables 
     lcd.setCursor(0,1);
@@ -468,6 +468,7 @@ void button_pressed() {
         lcd.setRGB(226, 53, 0);//lcd en "rouge"
         //affiche une deuxième grosse croix
         lcd_sur_2ligne(14, "X");
+    }
     }
 
     // //attend le relâchement du bouton pour continuer

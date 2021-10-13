@@ -39,12 +39,12 @@ int perdu = 0;
 
 // permet d'associer une tension au numéro du cable branché
 int numero(float tension) {
-    if (tension < 0.1) { return 0; }
-    if (tension < 0.3) { return 5; }
-    if (tension < 0.7) { return 4; }
+    if (tension < 0.2) { return 0; }
+    if (tension < 0.5) { return 5; }
+    if (tension < 1.1) { return 4; }
     if (tension < 1.5) { return 3; }
     if (tension < 2.0) { return 2; }
-    if (tension < 3.0) { return 1; }
+    if (tension < 4.0) { return 1; }
     else { return 9; }
 }
 
@@ -232,7 +232,7 @@ void gencombinaison() {
 
       //CABLE D
     //si le code comporte un D, un E et que le port 4 est vide -> branche au 4
-    if (dans("D",code) || dans("E",code) || dans("T",code) && pasbranche(4) == 1) { combinaison[3] = 4; }
+    if ((dans("D",code) || dans("E",code) || dans("T",code)) && pasbranche(4) == 1) { combinaison[3] = 4; }
     //si FRK et MSA allumé et port 2 vide -> branche au 2
     else if (FRK == 1 && pasbranche(2) == 1) { combinaison[3] = 2; }
     //si l'addition des numéros des ports vides est supérieure à 6 et port 1 vide -> branche au 1

@@ -439,7 +439,7 @@ void button_pressed() {
     //     perdu = digitalRead(ardui_clock);
     //     if (perdu == 1) { break; }
     // }
-        perdu = digitalRead(ardui_clock);
+    perdu = digitalRead(ardui_clock);
 
     //si jamais le joueur a perdu, quite la boucle
     if (perdu != 1) { 
@@ -618,11 +618,11 @@ int state = 0;
 int last_seed = -1;
 
 void button_press() {
-    button_state = true;
+    button_state = !button_state;
 }
-void button_unpress() {
-    button_state = false;
-}
+// void button_unpress() {
+//     button_state = false;
+// }
 
 void setup() { 
     lcd.begin(16,2);
@@ -630,7 +630,7 @@ void setup() {
     lcd.setCursor(0,0);
     randomSeed(analogRead(9));
     attachInterrupt(digitalPinToInterrupt(bouton), button_press, RISING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
-    attachInterrupt(digitalPinToInterrupt(bouton), button_unpress, FALLING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
+    // attachInterrupt(digitalPinToInterrupt(bouton), button_unpress, FALLING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
 }
 
 void loop() {

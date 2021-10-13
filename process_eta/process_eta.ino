@@ -90,7 +90,7 @@ void init_pins() {
     pinMode(ardui_in, INPUT);
     
     //bouton module cables/principale
-    pinMode(bouton, INPUT);
+    pinMode(bouton, INPUT_PULLUP);
 
     //cables module cables
     pinMode(cable1, INPUT);

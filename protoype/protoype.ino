@@ -83,7 +83,7 @@ int ledFRK = 9;
 
 //compare la combinaison correcte à la combinaison rentrée, renvoie 1 en cas d'erreur, 0 sinon
 int checkErreur() {
-    for(i = 0; i < 5; i++) {
+    for(int i = 0; i < 5; i++) {
         if (resultats[i] != combinaison[i]) { return 1; }
     }
     return 0;
@@ -92,7 +92,7 @@ int checkErreur() {
 //génère le code et remplit les critères comme le nombre de voyelles, les nombres impairs...
 int n;
 void creecode(){
-    for (i = 0; i < 8; i++){
+    for (int i = 0; i < 8; i++){
         n = random()%36;
         code[i] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[n];
   
@@ -134,7 +134,7 @@ int chiffreE4(){
     int trois=0;
     int quatre=0;
     int cinq=0;
-    for(i=0;i<5;i++) {
+    for(int i=0;i<5;i++) {
         if (combinaison[i]==1) {un=1;}
         else if (combinaison[i]==2) {deux=1;}
         else if (combinaison[i]==3) {trois=1;}
@@ -149,7 +149,7 @@ int chiffreE4(){
 }
 
 int remplace_chiffreE4() {
-    for (i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
         if      (combinaison[i] == 1) { return 1; }
         else if (combinaison[i] == 2) { return 2; }
         else if (combinaison[i] == 3) { return 3; }
@@ -160,7 +160,7 @@ int remplace_chiffreE4() {
 
 //cherche la présence d'un caractère dans une liste
 int dans(char lettre[], char liste[]){
-    for (i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
       if (liste[i] == lettre[0]) { return 1; }
     }
     return 0;
@@ -168,7 +168,7 @@ int dans(char lettre[], char liste[]){
 
 //cherche la présence d'un chiffre dans une liste
 int cdans(int num, int liste[]) {
-    for (i = 0; i < 8; i++){
+    for (int i = 0; i < 8; i++){
         if (liste[i] == num) { return 1; }
     }
     return 0;
@@ -183,14 +183,14 @@ int pasbranche(int n) {
 // ?????????
 int addition() {
     int add = 0;
-    for (i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
         if (combinaison[i] == 0) { add = add + i + 1; }
     }
 }
 
 int libre() {
     int lib = 0;
-    for (i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
         if (combinaison[i] == 0) { lib++; }
     }
     return lib;

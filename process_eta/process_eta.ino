@@ -631,11 +631,12 @@ int last_seed = -1;
 
 void button_press() {
     button_state = !button_state;
-            lcd.print("bouton");
+            lcd.print("bouton1");
 }
-// void button_unpress() {
-//     button_state = false;
-// }
+void button_unpress() {
+    button_state = !button_state;
+            lcd.print("bouton2");
+}
 
 void setup() { 
     lcd.begin(16,2);
@@ -643,7 +644,7 @@ void setup() {
     lcd.setCursor(0,0);
     randomSeed(analogRead(9));
     attachInterrupt(digitalPinToInterrupt(bouton), button_press, RISING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
-    // attachInterrupt(digitalPinToInterrupt(bouton), button_unpress, FALLING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
+    attachInterrupt(digitalPinToInterrupt(bouton), button_unpress, FALLING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
 }
 
 void loop() {

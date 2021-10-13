@@ -6,9 +6,9 @@
 // with the arduino pin number it is connected to
 
 //couleur écran code (pour la modifier en cours de route éventuellement
-int colorR = 255;                                    
-int colorG = 255;
-int colorB = 255;
+int colorR = 80;                                    
+int colorG = 80;
+int colorB = 80;
 
 //ecran lcd
 rgb_lcd lcd; 
@@ -202,7 +202,7 @@ void gencombinaison() {
     //si chiffre en 3eme position -> branche au 4
     if (lchiffres[2] == 1 ) { combinaison[0] = 4; }
     //si NSA allumée et lettre en 7eme position -> branche au 3
-    else if (NSA == 1 && llettres[6] == 1 ) { combinaison[0] = 3; }
+    else if (NSA == 1 || FRK == 1 && llettres[6] == 1 ) { combinaison[0] = 3; }
     //si le code comporte un 2 -> branche au 5
     else if (dans("2",code) == 1 ) { combinaison[0] = 5; }
     //sinon branche au 4
@@ -232,9 +232,9 @@ void gencombinaison() {
 
       //CABLE D
     //si le code comporte un D, un E et que le port 4 est vide -> branche au 4
-    if (dans("D",code) && dans("E",code) && pasbranche(4) == 1) { combinaison[3] = 4; }
+    if (dans("D",code) || dans("E",code) || dans("T",code) && pasbranche(4) == 1) { combinaison[3] = 4; }
     //si FRK et MSA allumé et port 2 vide -> branche au 2
-    else if (FRK == 1 && MSA == 1 && pasbranche(2) == 1) { combinaison[3] = 2; }
+    else if (FRK == 1 && pasbranche(2) == 1) { combinaison[3] = 2; }
     //si l'addition des numéros des ports vides est supérieure à 6 et port 1 vide -> branche au 1
     else if (addition() > 6 && pasbranche(1) == 1) { combinaison[3] = 1; }
     //si le code comporte un 0 (zéro) et un 5 et port 5 vide -> branche au 5
@@ -253,13 +253,17 @@ void gencombinaison() {
     else if (dans("B",code) == 1 && dans("P",code) == 1) { combinaison[4] = chiffreE4(); }
 }
 
+
+
+
+
+
 // fonction qui s'execute au lancement du programme
 void setup() {
+    Serial.begin(9600);
     lcd.begin(16,2);
     lcd.setRGB(colorR, colorG, colorB);
     lcd.setCursor(0,0);
-  //debug si tu veux
-    lcd.print("amogus");
 
   //génération aléatoire d'un site grâce à la tension instable au bornes d'un pin
     randomSeed(analogRead(9));
@@ -346,33 +350,45 @@ void setup() {
         lcd.setCursor(6,1);
 
      //cherche si la combinaison rentrée comporte une erreur
+        lcd.setCursor(9,0);
+        lcd.print(resultats[0]);
+        lcd.print(resultats[1]);
+        lcd.print(resultats[2]);
+        lcd.print(resultats[3]);
+        lcd.print(resultats[4]);
+        Serial.println(V1);
+        Serial.println(V2);
+        Serial.println(V3);
+        Serial.println(V4);
+        Serial.println(V5);
+        
         if (checkErreur() == 1) { erreur++; }
         else { victoire = 1; }
         
         if (erreur == 1) {
         //la couleur vire vers le rouge
-          colorR = 255;
-          colorG = 171;
+          colorR = 127;
+          colorG = 85;
           colorB = 0;
           lcd.setRGB(colorR, colorG, colorB);
         //affiche une grosse croix
           lcd.setCursor(11,0);
-          lcd.print("X");
-          lcd.print("X");
+          //lcd.print("X");
+          //lcd.print("X");
           lcd.setCursor(11,1);
           lcd.print("X");
           lcd.print("X");
         }
         if (erreur == 2) {
         //la couleur vire encore
-            colorR = 226;
-            colorG = 53;
+            colorR = 127;
+            colorG = 26;
             colorB = 0;
             lcd.setRGB(colorR, colorG, colorB);
         //affiche une deuxième grosse croix
             lcd.setCursor(14,0);
-            lcd.print("X");
-            lcd.print("X");
+            //lcd.print("X");
+            //lcd.print("X");
             lcd.setCursor(14,1);
             lcd.print("X");
             lcd.print("X");

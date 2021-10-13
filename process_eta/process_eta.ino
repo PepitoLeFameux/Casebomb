@@ -3,7 +3,7 @@
 #define A10 , A11
 
 //ecran lcd
-rgb_lcd lcd; 
+rgb_lcd lcd;
 
 //assignation des pins des composants
 const int bouton = A8;
@@ -13,17 +13,17 @@ const int cable2 = A1;// 3.00V
 const int cable3 = A2;// 4.10V
 const int cable4 = A3;// 4.50V
 const int cable5 = A4;// 4.70V
-const int list_cables[] = {cable1, cable2, cable3, cable4, cable5};
+const int *list_cables[] = {&cable1, &cable2, &cable3, &cable4, &cable5};
 // LED
 const int ledNSA = 11;// pinledNSA
 const int ledMSA = 10;
 const int ledFRK = 9;
-const int list_LEDs[] = {ledNSA, ledMSA, ledFRK};
+const int *list_LEDs[] = {&ledNSA, &ledMSA, &ledFRK};
 // // valeur des 3 LED
-// int value_NSA;// ledNSA
-// int value_MSA;
-// int value_FRK;
-int list_value_LED[] = {0, 0, 0};//(WIP) [value_NSA, value_MSA, value_FRK]
+int NSA;// ledNSA
+int MSA;
+int FRK;
+int *list_value_LED[] = {&NSA, &MSA, &FRK};//(WIP) [value_NSA, value_MSA, value_FRK]
 // arduino
 const int ardui_in = 53;
 const int ardui_out = 51;
@@ -76,8 +76,8 @@ void init_leds() {
     // if (value_MSA == 1) { analogWrite(ledMSA, 30); }
     // if (value_FRK == 1) { analogWrite(ledFRK, 30); }
     for (int i = 0; i < 3; i ++) {//list_LEDs[i]
-        list_value_LED[i] = random()%2;
-        if (list_value_LED[i] == 1) { analogWrite(list_LEDs[i], 30); }
+        *list_value_LED[i] = random()%2;
+        if (*list_value_LED[i] == 1) { analogWrite(*list_LEDs[i], 30); }
 
     }
 }
@@ -285,15 +285,15 @@ int chiffreE4(){
     if(cinq==0){ return 5; }
 }
 
-int remplace_chiffreE4() {
-    for (int i = 0; i < 5; i++) {
-        if      (combinaison[i] == 1) { return 1; }
-        else if (combinaison[i] == 2) { return 2; }
-        else if (combinaison[i] == 3) { return 3; }
-        else if (combinaison[i] == 4) { return 4; }
-        else if (combinaison[i] == 5) { return 5; }
-    }
-}
+// int remplace_chiffreE4() {
+//     for (int i = 0; i < 5; i++) {
+//         if      (combinaison[i] == 1) { return 1; }
+//         else if (combinaison[i] == 2) { return 2; }
+//         else if (combinaison[i] == 3) { return 3; }
+//         else if (combinaison[i] == 4) { return 4; }
+//         else if (combinaison[i] == 5) { return 5; }
+//     }
+// }
 
 //cherche la présence d'un caractère dans une liste
 int dans(char lettre[], char liste[]) { 
@@ -331,7 +331,7 @@ void gencombinaison() {
     //si chiffre en 3eme position -> branche au 4
     if (lchiffres[2] == 1 ) { combinaison[0] = 4; }
     //si NSA allumée et lettre en 7eme position -> branche au 3
-    else if (list_value_LED[0] == 1 && llettres[6] == 1 ) { combinaison[0] = 3; }
+    else if (NSA == 1 || FRK == 1 && llettres[6] == 1 ) { combinaison[0] = 3; }
     //si le code comporte un 2 -> branche au 5
     else if (dans("2",code) == 1 ) { combinaison[0] = 5; }
     //sinon branche au 4
@@ -339,7 +339,7 @@ void gencombinaison() {
 
       //CABLE B
     //si MSA allumée -> branche au 1
-    if (list_value_LED[1] == 1) { combinaison[1]=1 ;}
+    if (MSA == 1) { combinaison[1]=1 ;}
     //si plus de 3 lettres et port 3 vide -> branche au 3    
     else if (lettres > 3 && pasbranche(3) == 1 ) { combinaison[1] = 3; }
     //si le code comporte 2 et 4 et que port 5 vide -> branche au 5
@@ -361,9 +361,9 @@ void gencombinaison() {
 
       //CABLE D
     //si le code comporte un D, un E et que le port 4 est vide -> branche au 4
-    if (dans("D",code) && dans("E",code) && pasbranche(4) == 1) { combinaison[3] = 4; }
+    if (dans("D",code) || dans("E",code) || dans("T",code) && pasbranche(4) == 1) { combinaison[3] = 4; }
     //si FRK et MSA allumé et port 2 vide -> branche au 2
-    else if (list_value_LED[2] == 1 && list_value_LED[1] == 1 && pasbranche(2) == 1) { combinaison[3] = 2; }
+    else if (FRK == 1 && pasbranche(2) == 1) { combinaison[3] = 2; }
     //si l'addition des numéros des ports vides est supérieure à 6 et port 1 vide -> branche au 1
     else if (addition() > 6 && pasbranche(1) == 1) { combinaison[3] = 1; }
     //si le code comporte un 0 (zéro) et un 5 et port 5 vide -> branche au 5

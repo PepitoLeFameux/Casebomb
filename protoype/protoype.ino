@@ -1,6 +1,6 @@
 
-// #include <Wire.h>                                            // appel des bibliotheques
-// #include "rgb_lcd.h"
+#include <Wire.h>                                            // appel des bibliotheques
+#include "rgb_lcd.h"
 #define A10 , A11
 // initialize the library by associating any needed LCD interface pin
 // with the arduino pin number it is connected to

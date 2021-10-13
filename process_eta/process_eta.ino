@@ -532,19 +532,19 @@ void Module1() {
         
         perdu = digitalRead(ardui_clock);
         
+        if(temps_ms - previousMillis2 >= interval) {
+            // button_pressed();
+            // Serial.println("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
+            lcd.print("loop");
+            previousMillis2 = temps_ms;
+        }
+        
         if (button_state) {
             if(temps_ms - previousMillis >= interval) {
                 button_pressed();
                 // Serial.println("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
             }
             previousMillis = temps_ms;
-        }
-        
-        if(temps_ms - previousMillis2 >= interval) {
-            // button_pressed();
-            // Serial.println("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
-            lcd.print("loop");
-            previousMillis2 = temps_ms;
         }
         // if(temps_ms - previousMillis >= interval) {
         //     // Serial.println("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)

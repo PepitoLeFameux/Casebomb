@@ -524,6 +524,7 @@ void Module1() {
     const unsigned long interval = 500; // constante à 1000ms = 1s, ici 500ms
 
 
+            lcd.print("enter");
     //la partie se joue tant que erreur<3 et pas victoire
     while (erreur < 3 && victoire == 0) {
         temps_ms = millis();

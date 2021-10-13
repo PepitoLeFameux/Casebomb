@@ -525,7 +525,7 @@ void Module1() {
     const unsigned long interval = 500; // constante à 1000ms = 1s, ici 500ms
 
 
-            lcd.print("enter");
+            // lcd.print("enter");
     //la partie se joue tant que erreur<3 et pas victoire
     while (erreur < 3 && victoire == 0) {
         temps_ms = millis();
@@ -543,8 +543,8 @@ void Module1() {
         
         if (button_state) {
             if(temps_ms - previousMillis >= interval) {
+                // lcd.print("aaaaaaa"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
                 button_pressed();
-                // Serial.println("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
             }
             previousMillis = temps_ms;
         }
@@ -631,20 +631,20 @@ int last_seed = -1;
 
 void button_press() {
     button_state = !button_state;
-            lcd.print("bouton1");
+    lcd.print("bouton");
 }
-void button_unpress() {
-    button_state = !button_state;
-            lcd.print("bouton2");
-}
+// void button_unpress() {
+//     button_state = !button_state;
+//             lcd.print("bouton2");
+// }
 
 void setup() { 
     lcd.begin(16,2);
     lcd.setRGB(50,50,50);
     lcd.setCursor(0,0);
     randomSeed(analogRead(9));
-    attachInterrupt(digitalPinToInterrupt(bouton), button_press, RISING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
-    attachInterrupt(digitalPinToInterrupt(bouton), button_unpress, FALLING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
+    attachInterrupt(digitalPinToInterrupt(bouton), button_press, CHANGE); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
+    // attachInterrupt(digitalPinToInterrupt(bouton), button_unpress, FALLING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
 }
 
 void loop() {

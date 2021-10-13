@@ -1,5 +1,5 @@
-// #include <Wire.h>                                            // appel des bibliotheques
-// #include "rgb_lcd.h"
+#include <Wire.h>                                            // appel des bibliotheques
+#include "rgb_lcd.h"
 #define A10 , A11
 
 //ecran lcd
@@ -19,6 +19,11 @@ const int ledNSA = 11;// pinledNSA
 const int ledMSA = 10;
 const int ledFRK = 9;
 const int list_LEDs[] = {ledNSA, ledMSA, ledFRK};
+// // valeur des 3 LED
+// int value_NSA;// ledNSA
+// int value_MSA;
+// int value_FRK;
+int list_value_LED[] = {0, 0, 0};//(WIP) [value_NSA, value_MSA, value_FRK]
 // arduino
 const int ardui_in = 53;
 const int ardui_out = 51;
@@ -49,16 +54,11 @@ char code[] = "00000000";
 int erreur = 0;
 int victoire = 0;
 int perdu = 0;
-// // valeur des 3 LED
-// int value_NSA;// ledNSA
-// int value_MSA;
-// int value_FRK;
-int list_value_LED[] = {0, 0, 0};//(WIP) [value_NSA, value_MSA, value_FRK]
 
 void init_lcd() {
     // initialisation lcd avec test
     lcd.begin(16,2);
-    lcd.setRGB(255, 255, 255);
+    lcd.setRGB(127, 127, 127);
     lcd.setCursor(0,0);
     //debug si tu veux
     lcd.print("amogus");
@@ -66,7 +66,7 @@ void init_lcd() {
 
 void init_leds() {
     //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
-    randomSeed(analogRead(9));
+    // randomSeed(analogRead(9));
     // value_NSA = random()%2;
     // value_MSA = random()%2;
     // value_FRK = random()%2;
@@ -258,12 +258,80 @@ void creecode(){
     }
 }
 
+int condE4(){
+    if (pasbranche(5) == 1) { return 5; }
+    if (pasbranche(1) == 1) { return 1; }
+    else { return 0; }
+}
+
+// possibillite de completement enleve les "un","deux",...
+int chiffreE4(){
+    int un=0;
+    int deux=0;
+    int trois=0;
+    int quatre=0;
+    int cinq=0;
+    for(int i=0;i<5;i++) {
+        if (combinaison[i]==1) {un=1;}
+        else if (combinaison[i]==2) {deux=1;}
+        else if (combinaison[i]==3) {trois=1;}
+        else if (combinaison[i]==4) {quatre=1;}
+        else if (combinaison[i]==5) {cinq=1;}
+    }
+    if(un==0){ return 1; }
+    if(deux==0){ return 2; }
+    if(trois==0){ return 3; }
+    if(quatre==0){ return 4; }
+    if(cinq==0){ return 5; }
+}
+
+int remplace_chiffreE4() {
+    for (int i = 0; i < 5; i++) {
+        if      (combinaison[i] == 1) { return 1; }
+        else if (combinaison[i] == 2) { return 2; }
+        else if (combinaison[i] == 3) { return 3; }
+        else if (combinaison[i] == 4) { return 4; }
+        else if (combinaison[i] == 5) { return 5; }
+    }
+}
+
+//cherche la présence d'un caractère dans une liste
+int dans(char lettre[], char liste[]) { 
+    for (int i = 0; i < 8; i++) { 
+        if (liste[i] == lettre[0]) { 
+            return 1; 
+    }} return 0; 
+}
+//cherche la présence d'un chiffre dans une liste
+int cdans(int num, int liste[]) {
+    for (int i = 0; i < 8; i++) { 
+        if (liste[i] == num) { 
+            return 1; 
+    }} return 0; 
+}
+//renvoie 1 si le cable n n'est pas branché
+int pasbranche(int n) { 
+    if (cdans(n,combinaison) == 1) { return 0; } else { return 1; } 
+}
+// ?????????
+int addition() { 
+    int add = 0; 
+    for (int i = 0; i < 5; i++) { 
+        if (combinaison[i] == 0) { add = add + i + 1; }} 
+}
+int libre() { 
+    int lib = 0; 
+    for (int i = 0; i < 5; i++) { 
+        if (combinaison[i] == 0) { lib++; } 
+    } return lib; 
+}
+
 void gencombinaison() {
       //CABLE A
     //si chiffre en 3eme position -> branche au 4
     if (lchiffres[2] == 1 ) { combinaison[0] = 4; }
     //si NSA allumée et lettre en 7eme position -> branche au 3
-    else if (ledNSA == 1 && llettres[6] == 1 ) { combinaison[0] = 3; }
+    else if (list_value_LED[0] == 1 && llettres[6] == 1 ) { combinaison[0] = 3; }
     //si le code comporte un 2 -> branche au 5
     else if (dans("2",code) == 1 ) { combinaison[0] = 5; }
     //sinon branche au 4
@@ -271,7 +339,7 @@ void gencombinaison() {
 
       //CABLE B
     //si MSA allumée -> branche au 1
-    if (ledMSA == 1) { combinaison[1]=1 ;}
+    if (list_value_LED[1] == 1) { combinaison[1]=1 ;}
     //si plus de 3 lettres et port 3 vide -> branche au 3    
     else if (lettres > 3 && pasbranche(3) == 1 ) { combinaison[1] = 3; }
     //si le code comporte 2 et 4 et que port 5 vide -> branche au 5
@@ -295,7 +363,7 @@ void gencombinaison() {
     //si le code comporte un D, un E et que le port 4 est vide -> branche au 4
     if (dans("D",code) && dans("E",code) && pasbranche(4) == 1) { combinaison[3] = 4; }
     //si FRK et MSA allumé et port 2 vide -> branche au 2
-    else if (ledFRK == 1 && ledMSA == 1 && pasbranche(2) == 1) { combinaison[3] = 2; }
+    else if (list_value_LED[2] == 1 && list_value_LED[1] == 1 && pasbranche(2) == 1) { combinaison[3] = 2; }
     //si l'addition des numéros des ports vides est supérieure à 6 et port 1 vide -> branche au 1
     else if (addition() > 6 && pasbranche(1) == 1) { combinaison[3] = 1; }
     //si le code comporte un 0 (zéro) et un 5 et port 5 vide -> branche au 5
@@ -322,7 +390,7 @@ void Module1() {
     //initialisation des modules principaux (times et autres si nécessaire)
 
     init_pins();
-    init_lcd();
+    // init_lcd();
     init_leds();
 
     creecode();   
@@ -409,6 +477,7 @@ void Module1() {
     }
     //coupe le signal envoyé vers l'arduino 2
     digitalWrite(ardui_out,LOW);
+    module_finished = true;
 }
 void Module2() {
     
@@ -431,13 +500,22 @@ bool module_finished = false;
 
 int last_seed = -1;
 
-void setup() {}
+void setup() { 
+    lcd.begin(16,2);
+    lcd.setRGB(255, 255, 255);
+    lcd.setCursor(0,0);
+  //debug si tu veux
+    lcd.print("amogus");
+    randomSeed(analogRead(9));
+}
+
 void loop() {
     // generate a seed to choose which function to launch
-    int seed = random(10) % 6;
-    while (seed == last_seed) {
-        seed = random(10) % 6;
-    }
+    // int seed = random(10) % 6;
+    // while (seed == last_seed) {
+    //     seed = random(10) % 6;
+    // }
+    int seed = 0;
     while (!module_finished) {
         switch (seed) {
             case 0 : {

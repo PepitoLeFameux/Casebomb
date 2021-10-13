@@ -1,6 +1,7 @@
 #include <Wire.h>                                            // appel des bibliotheques
 #include <Arduino.h>
 #include "rgb_lcd.h"
+#include <Arduino.h>
 #define A10 , A11
 
 //ecran lcd

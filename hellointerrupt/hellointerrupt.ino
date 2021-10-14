@@ -9,7 +9,7 @@ volatile bool ledState = LOW; // on assigne une valeur booléenne variable pour 
 
 unsigned long previousMillis = 0;
 unsigned long temps_ms; 
-const unsigned long interval = 10000; // constante à 10000ms = 10s
+const unsigned long interval = 5000; // constante à 10000ms = 10s
 
 void setup() {
     lcd.begin(16,2);

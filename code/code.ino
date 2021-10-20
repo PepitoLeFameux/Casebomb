@@ -71,7 +71,7 @@ void setup() {
     lcd.setCursor(0,0);
     //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
     randomSeed(analogRead(7));
-    attachInterrupt(digitalPinToInterrupt(bouton), button_press, RISING);
+    attachInterrupt(digitalPinToInterrupt(bouton), button_press, CHANGE);
 }
 
 void loop() {

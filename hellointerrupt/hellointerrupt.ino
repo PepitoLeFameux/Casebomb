@@ -18,7 +18,7 @@ void setup() {
     // Serial. begin(9600);
     // pinMode(LED_PIN, OUTPUT);
     pinMode(INTERRUPT_PIN, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), myISR, CHANGE); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
+    attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), myISR, CHANGE); //marche pas pour notre arduino
 }
 
 void loop() {

@@ -642,6 +642,7 @@ void setup() {
     lcd.setRGB(50,50,50);
     lcd.setCursor(0,0);
     randomSeed(analogRead(7));
+    // "attachInterrupt" ne marche pas
     attachInterrupt(digitalPinToInterrupt(bouton), button_press, RISING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
     // attachInterrupt(digitalPinToInterrupt(bouton), button_unpress, FALLING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
 }

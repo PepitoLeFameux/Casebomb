@@ -84,7 +84,7 @@ void loop() {
     while (!module_finished) {
         switch (seed) {
             case 0 : {
-                Module1();
+                Module1(combinaison, llettres, lchiffres, lettres, chiffres);
                 break;
             }
             // case 1 :{

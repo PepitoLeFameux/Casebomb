@@ -1,7 +1,16 @@
 #include <Wire.h>
 #include <Arduino.h>
 #include "rgb_lcd.h"
+#include "combinaison_check.ino"
 
+// initialisation des variables
+int resultats[] = {0,0,0,0,0}; //combinaison rentrée
+int combinaison[] = {0,0,0,0,0}; //combinaison correcte
+
+int lchiffres[] = {0,0,0,0,0,0,0,0};
+int llettres[] = {0,0,0,0,0,0,0,0};
+int chiffres;
+int lettres;
 void init_lcd() {
     // initialisation lcd avec test
     lcd.begin(16,2);
@@ -14,7 +23,6 @@ void init_leds() {
     for (int i = 0; i < 3; i ++) {//list_LEDs[i]
         *list_value_LED[i] = random()%2;
         if (*list_value_LED[i] == 1) { analogWrite(*list_LEDs[i], 30); }
-
     }
 }
 
@@ -67,18 +75,16 @@ int checkErreur() {
     return 0;
 }
 
-int n;
-void creecode(){
+void creecode(int *llettres[], int *lchiffres[], int *lettres, int *chiffres){
     for (int i = 0; i < 8; i++){
-        n = random()%36;
+        int n = random()%36;
         code[i] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[n];
-  
         if (0 <= n && n <= 25) {
-            llettres[i] = 1;
-            lettres++;
+            *llettres[i] = 1;
+            *lettres++;
         } else {
-            lchiffres[i] = 1;
-            chiffres++;
+            *lchiffres[i] = 1;
+            *chiffres++;
         }
     }
 }
@@ -99,38 +105,8 @@ int chiffreE4() {
     }
 }
 
-//cherche la présence d'un caractère dans une liste
-int dans(char lettre[], char liste[]) { 
-    for (int i = 0; i < 8; i++) { 
-        if (liste[i] == lettre[0]) { 
-            return 1; 
-    }} return 0; 
-}
-//cherche la présence d'un chiffre dans une liste
-int cdans(int num, int liste[]) {
-    for (int i = 0; i < 8; i++) { 
-        if (liste[i] == num) { 
-            return 1; 
-    }} return 0; 
-}
-//renvoie 1 si le cable n n'est pas branché
-int pasbranche(int n) { 
-    if (cdans(n,combinaison) == 1) { return 0; } else { return 1; } 
-}
-// ?????????
-int addition() { 
-    int add = 0; 
-    for (int i = 0; i < 5; i++) { 
-        if (combinaison[i] == 0) { add = add + i + 1; }} 
-}
-int libre() { 
-    int lib = 0; 
-    for (int i = 0; i < 5; i++) { 
-        if (combinaison[i] == 0) { lib++; } 
-    } return lib; 
-}
 
-void gencombinaison() {
+void gencombinaison(int combinaison[], int llettres[], int lchiffres[]) {
       //CABLE A
     //si chiffre en 3eme position -> branche au 4
     if (lchiffres[2] == 1 ) { combinaison[0] = 4; }
@@ -157,7 +133,7 @@ void gencombinaison() {
     //si port 1 vide et plus de 4 lettres dans le code -> branche au 1
     else if (pasbranche(1) == 1 && lettres > 4) { combinaison[2] = 1; }
     //si lettre en 4eme position et chiffre en 7eme position et port 2 vide -> branche au 2
-    else if (llettres[3] == "1" && lchiffres[6] == "1" && pasbranche(2) == 1) { combinaison[2] = 2; }
+    else if (llettres[3] == 1 && lchiffres[6] == 1 && pasbranche(2) == 1) { combinaison[2] = 2; }
     //si port 3 vide -> branche au 3
     else if (pasbranche(3) == 1) { combinaison[2] = 3; }
     //sinon ne pas brancher
@@ -220,14 +196,14 @@ void button_pressed() {
 }
 
 
-void Module1() {
+void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, int chiffres) {
 
     init_pins();
     // init_lcd();
     init_leds();
 
-    creecode();   
-    gencombinaison();
+    creecode(&llettres, &lchiffres, &lettres, &chiffres);   
+    gencombinaison(combinaison, llettres, lchiffres);
     
     //envoie un signal à l'arduino 2
     digitalWrite(ardui_out, HIGH);

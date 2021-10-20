@@ -218,7 +218,9 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
         lcd.print(combinaison[i]);
     }
 
-    while (erreur < 3 && victoire == 0) { }
+    while (erreur < 3 && victoire == 0) {
+        erreur += 1;
+    }
 
     //en fin de partie, si perdu(compte à rebours) ou 3 erreurs
     if (erreur == 3 || perdu == 1) {

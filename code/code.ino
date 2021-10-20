@@ -21,11 +21,11 @@ const int ledNSA = 11;// pinledNSA
 const int ledMSA = 10;
 const int ledFRK = 9;
 const int *list_LEDs[] = {&ledNSA, &ledMSA, &ledFRK};
-// // valeur des 3 LED
+// valeur des 3 LED
 int NSA;// ledNSA
 int MSA;
 int FRK;
-int *list_value_LED[] = {&NSA, &MSA, &FRK};//(WIP) [value_NSA, value_MSA, value_FRK]
+int *list_value_LED[] = {&NSA, &MSA, &FRK};// [value_NSA, value_MSA, value_FRK]
 // arduino
 const int ardui_in = 53;
 const int ardui_out = 51;
@@ -38,18 +38,11 @@ int combinaison[] = {0,0,0,0,0}; //combinaison correcte
 // les arrays comme lpair représentent la position des nombres impairs dans le code
 // par exemple lvoyelles[]={0,0,1,0} indique un une voyalle en 3eme position dans le code
 int lchiffres[] = {0,0,0,0,0,0,0,0};
-// int lpair[] = {0,0,0,0,0,0,0,0};
-// int limpair[] = {0,0,0,0,0,0,0,0};
 int chiffres;
-// int impair;
-// int pair;
+
 
 int llettres[] = {0,0,0,0,0,0,0,0};
-// int lvoyelles[] = {0,0,0,0,0,0,0,0};
-// int lconsonnes[] = {0,0,0,0,0,0,0,0};
 int lettres;
-// int voyelles;
-// int consonnes;
 bool module_finished = false;
 
 char code[] = "00000000";
@@ -66,8 +59,6 @@ void init_lcd() {
 }
 
 void init_leds() {
-    //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
-
     //allume les LEDs qui sont activées
     for (int i = 0; i < 3; i ++) {//list_LEDs[i]
         *list_value_LED[i] = random()%2;
@@ -134,24 +125,9 @@ void creecode(){
         if (0 <= n && n <= 25) {
             llettres[i] = 1;
             lettres++;
-    
-            if (n == 0 || n == 4 || n == 8 || n == 14 || n == 20 || n == 24){
-                // lvoyelles[i] = 1;
-                // voyelles++;
-            } else {
-                // lconsonnes[i] = 1;
-                // consonnes++;
-            }
         } else {
             lchiffres[i] = 1;
             chiffres++;
-            if (n%2 == 0) {
-                // lpair[i] = 1;
-                // pair++;
-            } else {
-                // limpair[i] = 1;
-                // impair++;
-            }
         }
     }
 }
@@ -162,36 +138,15 @@ int condE4(){
     else { return 0; }
 }
 
-// possibillite de completement enleve les "un","deux",...
-int chiffreE4(){
-    int un=0;
-    int deux=0;
-    int trois=0;
-    int quatre=0;
-    int cinq=0;
-    for(int i=0;i<5;i++) {
-        if (combinaison[i]==1) {un=1;}
-        else if (combinaison[i]==2) {deux=1;}
-        else if (combinaison[i]==3) {trois=1;}
-        else if (combinaison[i]==4) {quatre=1;}
-        else if (combinaison[i]==5) {cinq=1;}
+int chiffreE4() {
+    for (int i = 0; i < 5; i++) {
+        if      (combinaison[i] == 1) { return 1; }
+        else if (combinaison[i] == 2) { return 2; }
+        else if (combinaison[i] == 3) { return 3; }
+        else if (combinaison[i] == 4) { return 4; }
+        else if (combinaison[i] == 5) { return 5; }
     }
-    if(un==0){ return 1; }
-    if(deux==0){ return 2; }
-    if(trois==0){ return 3; }
-    if(quatre==0){ return 4; }
-    if(cinq==0){ return 5; }
 }
-
-// int remplace_chiffreE4() {
-//     for (int i = 0; i < 5; i++) {
-//         if      (combinaison[i] == 1) { return 1; }
-//         else if (combinaison[i] == 2) { return 2; }
-//         else if (combinaison[i] == 3) { return 3; }
-//         else if (combinaison[i] == 4) { return 4; }
-//         else if (combinaison[i] == 5) { return 5; }
-//     }
-// }
 
 //cherche la présence d'un caractère dans une liste
 int dans(char lettre[], char liste[]) { 
@@ -280,64 +235,7 @@ void gencombinaison() {
     else if (dans("B",code) == 1 && dans("P",code) == 1) { combinaison[4] = chiffreE4(); }
 }
 
-// void check_button_pressed() {
-//     //attente de l'appui du bouton (maintenu)
-//     while (analogRead(bouton) < 800) {
-    
-//         //vérifie en boucle que l'arduino 2 n'a pas envoyé de signal de fin de timer
-//         perdu = digitalRead(ardui_clock);
-//         if (perdu == 1) { break; }
-//     }
-
-//     //si jamais le joueur a perdu, quite la boucle
-//     if (perdu == 1) { break; }
-
-//     // assignation des valeurs de chaque port en fonction du branchement des cables 
-//     lcd.setCursor(0,1);
-//     for (int i = 0; i < 5; i ++) {
-//         float voltage = analogRead(list_cables[i]) * 5.0 / 1023.0;// mesure le voltage de chaque port 
-//         resultats[i] = numero(voltage);// assigne un numéro au port en fonction du voltage du cables qui lui est branché
-//         lcd.print(combinaison[i]);// affiche les résultats attendus //debug
-//     }
-
-//     //place le curseur  juste après le code
-//     lcd.setCursor(6,1);
-
-//     //cherche si la combinaison rentrée comporte une erreur
-//     if (checkErreur() == 1) { erreur++; }
-//     else { victoire = 1; }
-    
-
-//     if (erreur == 1) {// le joueur se trompe 1 fois
-//         lcd.setRGB(255, 171, 0);//lcd en "jaune"
-//         //affiche une grosse croix
-//         lcd_sur_2ligne(11, "X");
-//     }
-//     if (erreur == 2) {// le joueur se trompe 2 fois
-//         lcd.setRGB(226, 53, 0);//lcd en "rouge"
-//         //affiche une deuxième grosse croix
-//         lcd_sur_2ligne(14, "X");
-//     }
-
-//     //attend le relâchement du bouton pour continuer
-//     while (analogRead(bouton) > 900) {
-    
-//         //vérifie en boucle que l'arudino 2 n'a pas envoyé de signal de fin de timer
-//         perdu = digitalRead(ardui_clock);
-//         if (perdu == 1) { break; }
-//     }
-// }
-
-
 void button_pressed() {
-    // //attente de l'appui du bouton (maintenu)
-    // while (analogRead(bouton) < 800) {
-    
-    //     //vérifie en boucle que l'arduino 2 n'a pas envoyé de signal de fin de timer
-    //     perdu = digitalRead(ardui_clock);
-    //     if (perdu == 1) { break; }
-    // }
-
     //si jamais le joueur a perdu, quite la boucle
     if (perdu != 1) { 
 
@@ -368,23 +266,10 @@ void button_pressed() {
             lcd_sur_2ligne(14, "X");
         }
     }
-
-    // //attend le relâchement du bouton pour continuer
-    // while (analogRead(bouton) > 900) {
-    
-    //     //vérifie en boucle que l'arudino 2 n'a pas envoyé de signal de fin de timer
-    //     perdu = digitalRead(ardui_clock);
-    //     if (perdu == 1) { break; }
-    // }
 }
 
 
 void Module1() {
-    
-    // randomSeed(analogRead(9));
-    //initialisation du system général
-    // I2C ?
-    //initialisation des modules principaux (times et autres si nécessaire)
 
     init_pins();
     // init_lcd();
@@ -406,83 +291,7 @@ void Module1() {
         lcd.print(combinaison[i]);
     }
 
-    // // Variables will change:
-    // int ledState = HIGH;         // the current state of the output pin
-    // int buttonState;             // the current reading from the input pin
-    // int lastButtonState = LOW;   // the previous reading from the input pin
-
-    // // // the following variables are unsigned longs because the time, measured in
-    // // // milliseconds, will quickly become a bigger number than can be stored in an int.
-    // unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
-    // unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
-    unsigned long previousMillis = 0;
-    unsigned long previousMillis2 = 0;
-    unsigned long temps_ms; 
-    const unsigned long interval = 500; // constante à 1000ms = 1s, ici 500ms
-
-
-            // lcd.print("enter");
-    //la partie se joue tant que erreur<3 et pas victoire
-    while (erreur < 3 && victoire == 0) {
-        temps_ms = millis();
-    
-        // digitalWrite(LED_PIN, ledState);
-        
-        perdu = digitalRead(ardui_clock);
-        
-        // if(temps_ms - previousMillis2 >= interval) {
-        //     // button_pressed();
-        //     // Serial.println("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
-        //     // lcd.print("loop");
-        //     previousMillis2 = temps_ms;
-        // }
-        
-        if (button_state) {
-            if(temps_ms - previousMillis >= interval) {
-                // lcd.print("aaaaaaa"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
-                button_pressed();
-            }
-            previousMillis = temps_ms;
-        }
-        // if(temps_ms - previousMillis >= interval) {
-        //     // Serial.println("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
-        // }
-        // int reading = digitalRead(bouton);
-
-        // // check to see if you just pressed the button
-        // // (i.e. the input went from LOW to HIGH), and you've waited long enough
-        // // since the last press to ignore any noise:
-
-        // // If the switch changed, due to noise or pressing:
-        // if (reading != lastButtonState) {
-        //     // reset the debouncing timer
-        //     lastDebounceTime = millis();
-        // }
-
-        // if ((millis() - lastDebounceTime) > debounceDelay) {
-        //     // whatever the reading is at, it's been there for longer than the debounce
-        //     // delay, so take it as the actual current state:
-
-        //     // if the button state has changed:
-        //     if (reading != buttonState) {
-        //         buttonState = reading;
-
-        //         // only toggle the LED if the new button state is HIGH
-        //         if (buttonState == HIGH) {
-        //             // ledState = !ledState;
-        //             // check_button_pressed();
-        //             button_pressed();
-        //         }
-        //     }
-        // }
-
-        // set the LED:
-        // digitalWrite(ledPin, ledState);
-
-        // save the reading. Next time through the loop, it'll be the lastButtonState:
-        // lastButtonState = reading;
-        // check_button_pressed();
-    }
+    while (erreur < 3 && victoire == 0) { }
 
     //en fin de partie, si perdu(compte à rebours) ou 3 erreurs
     if (erreur == 3 || perdu == 1) {
@@ -538,11 +347,8 @@ void setup() {
     lcd.begin(16,2);
     lcd.setRGB(50,50,50);
     lcd.setCursor(0,0);
-    randomSeed(analogRead(7));
-    // "attachInterrupt" ne marche pas
-    attachInterrupt(digitalPinToInterrupt(bouton), button_press, RISING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
-    // attachInterrupt(digitalPinToInterrupt(bouton), button_unpress, FALLING); // Se déclenche lorsque le bouton est enfoncé, mais pas lorsqu'il est relâché. C'est notre interruption. Nous la paramétrons sur front montant.
-}
+    //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
+    randomSeed(analogRead(9));}
 
 void loop() {
     // generate a seed to choose which function to launch

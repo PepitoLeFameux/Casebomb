@@ -62,7 +62,7 @@ int last_seed = -1;
 
 void button_press() {
     button_state = !button_state;
-    lcd.print("bouton");
+    //lcd.print("bouton");// DO NOT USE
 }
 void setup() {
     // interrupts();   
@@ -71,7 +71,7 @@ void setup() {
     lcd.setCursor(0,0);
     //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
     randomSeed(analogRead(7));}
-    // attachInterrupt(digitalPinToInterrupt(interruptPin), button_press, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(interruptPin), button_press, RISING);
 
 void loop() {
     // generate a seed to choose which function to launch

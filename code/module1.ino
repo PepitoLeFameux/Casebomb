@@ -205,9 +205,21 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     for (int i = 0; i < 5; i ++) {
         lcd.print(combinaison[i]);
     }
+    unsigned long previousMillis = 0;
+    unsigned long temps_ms; 
+    const unsigned long interval = 500; // constante à 1000ms = 1s, ici 500ms
 
     while (erreur < 3 && victoire == 0) {
-        erreur += 1;
+        temps_ms = millis();
+        perdu = digitalRead(ardui_clock);
+        
+        if (button_state) {
+            if(temps_ms - previousMillis >= interval) {
+                // lcd.print("aaaaaaa"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
+                button_pressed();
+            }
+            previousMillis = temps_ms;
+        }
     }
 
     //en fin de partie, si perdu(compte à rebours) ou 3 erreurs

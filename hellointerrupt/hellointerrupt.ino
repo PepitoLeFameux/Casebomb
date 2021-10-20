@@ -1,4 +1,4 @@
-#include <Wire.h>                                            // appel des bibliotheques
+#include <Wire.h>
 #include <Arduino.h>
 #include "rgb_lcd.h"
 
@@ -22,7 +22,7 @@ void setup() {
     // attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), myISR, CHANGE); //marche pas pour notre arduino
     for (int i = 0; i< 98; i ++) {
         pinMode(i, INPUT_PULLUP);
-        attachInterrupt(digitalPinToInterrupt(i), myISR, RISING); //marche pas pour notre arduino
+        attachInterrupt(digitalPinToInterrupt(i), myISR, CHANGE); //marche pas pour notre arduino
     }
 }
 

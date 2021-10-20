@@ -1,4 +1,4 @@
-#include <Wire.h>                                            // appel des bibliotheques
+#include <Wire.h>      // appel des bibliotheques
 #include <Arduino.h>
 #include "rgb_lcd.h"
 #include "module1.ino"

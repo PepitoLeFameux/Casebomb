@@ -39,8 +39,8 @@ void loop() {
 }
 
 void myISR() { // Interruption
-    delay(1000);
     ledState = !ledState;
     lcd.print("Interrupt"); 
+    delay(1000);
 }
 // note : LOW == false == 0, HIGH == true == 1, donc inverser le booléen revient à commuter entre LOW et HIGH.

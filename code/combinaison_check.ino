@@ -1,7 +1,3 @@
-//#include <Wire.h>
-//#include <Arduino.h>
-//#include "rgb_lcd.h"
-
 //cherche la présence d'un caractère dans une liste
 int dans(char lettre[], char liste[]) { 
     for (int i = 0; i < 8; i++) { 

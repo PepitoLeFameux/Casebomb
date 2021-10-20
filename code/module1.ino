@@ -1,7 +1,3 @@
-//#include <Wire.h>
-//#include <Arduino.h>
-//#include "rgb_lcd.h"
-//#include "header.h"
 
 void init_lcd() {
     // initialisation lcd avec test

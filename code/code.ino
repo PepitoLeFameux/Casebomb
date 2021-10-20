@@ -1,7 +1,6 @@
 #include <Wire.h>
 #include <Arduino.h>
 #include "rgb_lcd.h"
-//#include "header.h"
 
 #define A10 , A11
 
@@ -71,7 +70,7 @@ void setup() {
     lcd.setRGB(50,50,50);
     lcd.setCursor(0,0);
     //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
-    randomSeed(analogRead(9));}
+    randomSeed(analogRead(7));}
     // attachInterrupt(digitalPinToInterrupt(interruptPin), button_press, CHANGE);
 
 void loop() {

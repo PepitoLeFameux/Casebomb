@@ -67,15 +67,8 @@ void init_lcd() {
 
 void init_leds() {
     //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
-    // randomSeed(analogRead(9));
-    // value_NSA = random()%2;
-    // value_MSA = random()%2;
-    // value_FRK = random()%2;
 
-  //allume les LEDs qui sont activées
-    // if (value_NSA == 1) { analogWrite(ledNSA, 30); }
-    // if (value_MSA == 1) { analogWrite(ledMSA, 30); }
-    // if (value_FRK == 1) { analogWrite(ledFRK, 30); }
+    //allume les LEDs qui sont activées
     for (int i = 0; i < 3; i ++) {//list_LEDs[i]
         *list_value_LED[i] = random()%2;
         if (*list_value_LED[i] == 1) { analogWrite(*list_LEDs[i], 30); }
@@ -131,102 +124,6 @@ int checkErreur() {
     }
     return 0;
 }
-
-// void setup() {
-//     // randomSeed(analogRead(9));
-//     //initialisation du system général
-//     // I2C ?
-//     //initialisation des modules principaux (times et autres si nécessaire)
-
-//     init_pins();
-//     init_lcd();
-//     init_leds();
-
-//     creecode();   
-//     gencombinaison();
-    
-//     //envoie un signal à l'arduino 2
-//     digitalWrite(ardui_out, HIGH);
-//     delay(10);
-//     digitalWrite(ardui_out, LOW);
-    
-//     //affiche le code erreur
-//     lcd.print(code);
-//     lcd.setCursor(0,1);
-//     //affiche la combinaison correcte (debug)
-//     for (int i = 0; i < 5; i ++) {
-//         lcd.print(combinaison[i]);
-//     }
-
-//     //la partie se joue tant que erreur<3 et pas victoire
-//     while (erreur < 3 && victoire == 0) {
-
-//         //attente de l'appui du bouton (maintenu)
-//         while (analogRead(bouton) < 800) {
-        
-//             //vérifie en boucle que l'arduino 2 n'a pas envoyé de signal de fin de timer
-//             perdu = digitalRead(ardui_clock);
-//             if (perdu == 1) { break; }
-//         }
-
-//         //si jamais le joueur a perdu, quite la boucle
-//         if (perdu == 1) { break; }
-
-//         // assignation des valeurs de chaque port en fonction du branchement des cables 
-//         lcd.setCursor(0,1);
-//         for (int i = 0; i < 5; i ++) {
-//             float voltage = analogRead(list_cables[i]) * 5.0 / 1023.0;// mesure le voltage de chaque port 
-//             resultats[i] = numero(voltage);// assigne un numéro au port en fonction du voltage du cables qui lui est branché
-//             lcd.print(combinaison[i]);// affiche les résultats attendus //debug
-//         }
-
-//         //place le curseur  juste après le code
-//         lcd.setCursor(6,1);
-
-//         //cherche si la combinaison rentrée comporte une erreur
-//         if (checkErreur() == 1) { erreur++; }
-//         else { victoire = 1; }
-        
-
-//         if (erreur == 1) {// le joueur se trompe 1 fois
-//             lcd.setRGB(255, 171, 0);//lcd en "jaune"
-//             //affiche une grosse croix
-//             lcd_sur_2ligne(11, "X");
-//         }
-//         if (erreur == 2) {// le joueur se trompe 2 fois
-//             lcd.setRGB(226, 53, 0);//lcd en "rouge"
-//             //affiche une deuxième grosse croix
-//             lcd_sur_2ligne(14, "X");
-//         }
-
-//         //attend le relâchement du bouton pour continuer
-//         while (analogRead(bouton) > 900) {
-        
-//             //vérifie en boucle que l'arudino 2 n'a pas envoyé de signal de fin de timer
-//             perdu = digitalRead(ardui_clock);
-//             if (perdu == 1) { break; }
-//         }
-//     }
-
-//     //en fin de partie, si perdu(compte à rebours) ou 3 erreurs
-//     if (erreur == 3 || perdu == 1) {
-//         lcd.setRGB(0, 0, 0);//lcd en "noir"
-//         lcd.setCursor(0,0);
-//         lcd.print("     Perdu      ");
-//         lcd.setCursor(0,1);
-//         lcd.print(" Recommencer ?  ");
-//     }
-    
-//     //sinon victoire
-//     else {
-//         lcd.setCursor(0,0);
-//         lcd.print("  Desamorcage   ");
-//         lcd.setCursor(0,1);
-//         lcd.print("    Reussi      ");
-//     }
-//     //coupe le signal envoyé vers l'arduino 2
-//     digitalWrite(ardui_out,LOW);
-// }
 
 int n;
 void creecode(){

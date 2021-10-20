@@ -1,4 +1,4 @@
-#include <Wire.h>      // appel des bibliotheques
+#include <Wire.h>
 #include <Arduino.h>
 #include "rgb_lcd.h"
 #include "module1.ino"
@@ -29,6 +29,7 @@ const int bouton = 2;
 //ecran lcd
 rgb_lcd lcd;
 
+
 //// valeurs des pins
 // LEDs
 int NSA;
@@ -37,6 +38,7 @@ int FRK;
 int *list_value_LED[] = {&NSA, &MSA, &FRK};// [value_NSA, value_MSA, value_FRK]
 // bouton
 int button_state = false;
+
 
 //// autres
 // initialisation des variables

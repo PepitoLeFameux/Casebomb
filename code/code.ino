@@ -1,6 +1,6 @@
-// #include <Wire.h>                                            // appel des bibliotheques
-// #include <Arduino.h>
-// #include "rgb_lcd.h"
+#include <Wire.h>                                            // appel des bibliotheques
+#include <Arduino.h>
+#include "rgb_lcd.h"
 #include "module1.ino"
 
 #define A10 , A11
@@ -55,24 +55,7 @@ char code[] = "00000000";
 int erreur = 0;
 int victoire = 0;
 int perdu = 0;
-
-// void Module2() {
-    
-// }
-// void Module3() {
-    
-// }
-// void Module4() {
-    
-// }
-// void Module5() {
-    
-// }
-// void Module6() {
-    
-// }
-
-int state = 0;
+// int state = 0;
 
 int last_seed = -1;
 
@@ -102,26 +85,26 @@ void loop() {
                 Module1();
                 break;
             }
-            case 1 :{
-                Module2();
-                break;
-            }
-            case 2 : {
-                Module3();
-                break;
-            }
-            case 3 : {
-                Module4();
-                break;
-            }
-            case 4 : {
-                Module4();
-                break;
-            }
-            case 5 : {
-                Module4();
-                break;
-            }
+            // case 1 :{
+            //     Module2();
+            //     break;
+            // }
+            // case 2 : {
+            //     Module3();
+            //     break;
+            // }
+            // case 3 : {
+            //     Module4();
+            //     break;
+            // }
+            // case 4 : {
+            //     Module4();
+            //     break;
+            // }
+            // case 5 : {
+            //     Module4();
+            //     break;
+            // }
             default: { break; }
         }
     }

@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include <Arduino.h>
 #include "rgb_lcd.h"
-#include "module1.ino"
+#include "module1"
 
 #define A10 , A11
 

@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include <Arduino.h>
 #include "rgb_lcd.h"
-#include "combinaison_check.ino"
+#include "combinaison_check"
 
 // initialisation des variables
 int resultats[] = {0,0,0,0,0}; //combinaison rentrée

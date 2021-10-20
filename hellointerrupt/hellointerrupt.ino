@@ -20,7 +20,7 @@ void setup() {
     // pinMode(LED_PIN, OUTPUT);
     // pinMode(INTERRUPT_PIN, INPUT_PULLUP);
     // attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), myISR, CHANGE); //marche pas pour notre arduino
-    for (int i = 0; i< 98; i ++) {
+    for (int i = 0; i< 20; i ++) {
         pinMode(i, INPUT_PULLUP);
         attachInterrupt(digitalPinToInterrupt(i), myISR, CHANGE); //marche pas pour notre arduino
     }

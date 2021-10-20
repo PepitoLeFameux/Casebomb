@@ -12,13 +12,18 @@ unsigned long temps_ms;
 const unsigned long interval = 5000; // constante à 10000ms = 10s
 
 void setup() {
+    interrupts();   
     lcd.begin(16,2);
     lcd.setRGB(127, 127, 127);
     lcd.setCursor(0,0);
     // Serial. begin(9600);
     // pinMode(LED_PIN, OUTPUT);
-    pinMode(INTERRUPT_PIN, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), myISR, CHANGE); //marche pas pour notre arduino
+    // pinMode(INTERRUPT_PIN, INPUT_PULLUP);
+    // attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), myISR, CHANGE); //marche pas pour notre arduino
+    for (int i = 0; i< 98; i ++) {
+        pinMode(i, INPUT_PULLUP);
+        attachInterrupt(digitalPinToInterrupt(i), myISR, RISING); //marche pas pour notre arduino
+    }
 }
 
 void loop() {
@@ -27,18 +32,15 @@ void loop() {
     // digitalWrite(LED_PIN, ledState);
     
     if(temps_ms - previousMillis >= interval) {
-      previousMillis = temps_ms;
-    //   Serial.println("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
-      lcd.print("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
+        previousMillis = temps_ms;
+        //   Serial.println("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
+        lcd.print("Loop"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
     }
-    
-    
 }
 
 void myISR() { // Interruption
-  
+    delay(1000);
     ledState = !ledState;
     lcd.print("Interrupt"); 
-
 }
-    // note : LOW == false == 0, HIGH == true == 1, donc inverser le booléen revient à commuter entre LOW et HIGH.
+// note : LOW == false == 0, HIGH == true == 1, donc inverser le booléen revient à commuter entre LOW et HIGH.

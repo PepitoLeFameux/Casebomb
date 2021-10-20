@@ -207,7 +207,7 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     }
     unsigned long previousMillis = 0;
     unsigned long temps_ms; 
-    const unsigned long interval = 500; // constante à 1000ms = 1s, ici 500ms
+    const unsigned long interval = 200; // constante à 1000ms = 1s, ici 500ms
 
     while (erreur < 3 && victoire == 0) {
         temps_ms = millis();

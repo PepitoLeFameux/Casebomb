@@ -1,3 +1,5 @@
+const char DEBUG[] = ['A','B','C','D','E']
+
 void init_leds() {
     //allume les LEDs qui sont activées
     for (int i = 0; i < 3; i ++) {//list_LEDs[i]
@@ -180,8 +182,10 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     init_leds();
 
     creecode(&llettres, &lchiffres, &lettres, &chiffres);   
-    gencombinaison(combinaison, llettres, lchiffres);
-    
+    // gencombinaison(combinaison, llettres, lchiffres);
+    combinaison = [0, 0, 0, 0, 0];
+    // combinaison = [1, 2, 3, 4, 5];
+
     //envoie un signal à l'arduino 2
     //digitalWrite(ardui_out, HIGH);
     //delay(10);
@@ -193,6 +197,8 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     //affiche la combinaison correcte (debug)
     for (int i = 0; i < 5; i ++) {
         lcd.print(combinaison[i]);
+        lcd.print(DEBUG[i]);
+        lcd.print(" ");
     }
     unsigned long previousMillis = 0;
     unsigned long temps_ms; 

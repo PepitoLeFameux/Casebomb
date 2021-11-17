@@ -91,7 +91,7 @@ void gencombinaison(int combinaison[], int llettres[], int lchiffres[]) {
     //si chiffre en 3eme position -> branche au 4
     if (lchiffres[2] == 1 ) { combinaison[0] = 4; }
     //si NSA allumée et lettre en 7eme position -> branche au 3
-    else if (NSA == 1 || FRK == 1 && llettres[6] == 1 ) { combinaison[0] = 3; }
+    else if ( ( NSA == 1 || FRK == 1 ) && llettres[6] == 1 ) { combinaison[0] = 3; }
     //si le code comporte un 2 -> branche au 5
     else if (dans("2",code) == 1 ) { combinaison[0] = 5; }
     //sinon branche au 4
@@ -121,7 +121,7 @@ void gencombinaison(int combinaison[], int llettres[], int lchiffres[]) {
 
       //CABLE D
     //si le code comporte un D, un E et que le port 4 est vide -> branche au 4
-    if (dans("D",code) || dans("E",code) || dans("T",code) && pasbranche(4) == 1) { combinaison[3] = 4; }
+    if ( ( dans("D",code) || dans("E",code) || dans("T",code) ) && pasbranche(4) == 1) { combinaison[3] = 4; }
     //si FRK et MSA allumé et port 2 vide -> branche au 2
     else if (FRK == 1 && pasbranche(2) == 1) { combinaison[3] = 2; }
     //si l'addition des numéros des ports vides est supérieure à 6 et port 1 vide -> branche au 1
@@ -204,7 +204,7 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     unsigned long temps_ms; 
     const unsigned long interval = 200; // constante à 1000ms = 1s, ici 200ms
 
-    while (erreur < 3 && victoire == 0 && perduTemps==0) {
+    while (erreur < 3 && victoire == 0 && perduTemps!=10) {
         temps_ms = millis();
         checkChrono();
         if (button_state) {
@@ -217,7 +217,7 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     }
 
     //en fin de partie, si perdu(compte à rebours) ou 3 erreurs
-    if (erreur == 3 || perduTemps == 1) {
+    if (erreur == 3 || perduTemps == 10) {
         
         MasterSend=10; //10 = partie perdue
         Wire.beginTransmission(8);

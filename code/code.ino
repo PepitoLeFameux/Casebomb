@@ -84,13 +84,25 @@ void init_lcd() {
 int MasterSend = 5;
 int MasterReceive = 0;
 
-void receiveEvent(int dfgh){
-  MasterReceive=Wire.read();
-}
+//void receiveEvent(int dfgh){
+//  MasterReceive=Wire.read();
+//}
+
+//void checkChrono(){
+//  Wire.requestFrom(8,1);
+//  perduTemps = Wire.read();    // receive a byte as character
+//  Serial.println(perduTemps);         // print the character
+//}
 
 void checkChrono(){
-  if (MasterReceive==10) {perduTemps=1;}
+  Wire.requestFrom(8, 1);    // request 6 bytes from slave device #8
+
+  perduTemps = Wire.read(); // receive a byte as character
+  Serial.println(perduTemps);         // print the character
+
+  delay(100);
 }
+
 
 
 
@@ -104,8 +116,8 @@ void setup() {
     Wire.beginTransmission(8);
     Wire.write(MasterSend);
     Wire.endTransmission();
-    
-    // interrupts();  
+
+// interrupts();  
     init_lcd();
     //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
     randomSeed(analogRead(7));

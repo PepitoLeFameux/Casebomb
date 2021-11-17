@@ -1,11 +1,3 @@
-
-void init_lcd() {
-    // initialisation lcd avec test
-    lcd.begin(16,2);
-    lcd.setRGB(127, 127, 127);
-    lcd.setCursor(0,0);
-}
-
 void init_leds() {
     //allume les LEDs qui sont activées
     for (int i = 0; i < 3; i ++) {//list_LEDs[i]
@@ -16,8 +8,8 @@ void init_leds() {
 
 void init_pins() {
     //communication foireuse entre les arduinos
-    pinMode(ardui_out, OUTPUT);
-    pinMode(ardui_in, INPUT);
+    //pinMode(ardui_out, OUTPUT);
+    //pinMode(ardui_in, INPUT);
     
     //bouton module cables/principale
     pinMode(bouton, INPUT_PULLUP);
@@ -152,7 +144,7 @@ void gencombinaison(int combinaison[], int llettres[], int lchiffres[]) {
 
 void button_pressed() {
     //si jamais le joueur a perdu, ne rien faire
-    if (perdu != 1) { 
+    if (perduTemps != 1) { 
 
         // assignation des valeurs de chaque port en fonction du branchement des cables 
         lcd.setCursor(0,1);
@@ -171,12 +163,10 @@ void button_pressed() {
         
 
         if (erreur == 1) {// le joueur se trompe 1 fois
-            lcd.setRGB(255, 171, 0);//lcd en "jaune"
             //affiche une grosse croix
             lcd_sur_2ligne(11, "X");
         }
         if (erreur == 2) {// le joueur se trompe 2 fois
-            lcd.setRGB(226, 53, 0);//lcd en "rouge"
             //affiche une deuxième grosse croix
             lcd_sur_2ligne(14, "X");
         }
@@ -187,16 +177,15 @@ void button_pressed() {
 void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, int chiffres) {
 
     init_pins();
-    // init_lcd();
     init_leds();
 
     creecode(&llettres, &lchiffres, &lettres, &chiffres);   
     gencombinaison(combinaison, llettres, lchiffres);
     
     //envoie un signal à l'arduino 2
-    digitalWrite(ardui_out, HIGH);
-    delay(10);
-    digitalWrite(ardui_out, LOW);
+    //digitalWrite(ardui_out, HIGH);
+    //delay(10);
+    //digitalWrite(ardui_out, LOW);
     
     //affiche le code erreur
     lcd.print(code);
@@ -207,12 +196,11 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     }
     unsigned long previousMillis = 0;
     unsigned long temps_ms; 
-    const unsigned long interval = 200; // constante à 1000ms = 1s, ici 500ms
+    const unsigned long interval = 200; // constante à 1000ms = 1s, ici 200ms
 
-    while (erreur < 3 && victoire == 0) {
+    while (erreur < 3 && victoire == 0 && perduTemps==0) {
         temps_ms = millis();
-        perdu = digitalRead(ardui_clock);
-        
+        checkChrono();
         if (button_state) {
             if(temps_ms - previousMillis >= interval) {
                 // lcd.print("aaaaaaa"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
@@ -223,8 +211,13 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     }
 
     //en fin de partie, si perdu(compte à rebours) ou 3 erreurs
-    if (erreur == 3 || perdu == 1) {
-        lcd.setRGB(0, 0, 0);//lcd en "noir"
+    if (erreur == 3 || perduTemps == 1) {
+        
+        MasterSend=10; //10 = partie perdue
+        Wire.beginTransmission(8);
+        Wire.write(MasterSend);
+        Wire.endTransmission();
+
         lcd.setCursor(0,0);
         lcd.print("     Perdu      ");
         lcd.setCursor(0,1);
@@ -239,6 +232,6 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
         lcd.print("    Reussi      ");
     }
     //coupe le signal envoyé vers l'arduino 2
-    digitalWrite(ardui_out,LOW);
+    //digitalWrite(ardui_out,LOW);
     module_finished = true;
 }

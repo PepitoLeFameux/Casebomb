@@ -1,9 +1,8 @@
 #include <Wire.h>
 #include <Arduino.h>
-#include "rgb_lcd.h"
+#include <LiquidCrystal_I2C.h>
 
 #define A10 , A11
-
 
 //// pins
 //cables
@@ -19,14 +18,16 @@ const int ledMSA = 10;
 const int ledFRK = 9;
 const int *list_LEDs[] = {&ledNSA, &ledMSA, &ledFRK};
 // arduino
-const int ardui_in = 53;
-const int ardui_out = 51;
-const int ardui_clock = 40;
-const int *list_ardui[] = {&ardui_in, &ardui_out, &ardui_clock};
+//const int ardui_in = 53;
+//const int ardui_out = 51;
+//const int ardui_clock = 40;
+//const int *list_ardui[] = {&ardui_in, &ardui_out, &ardui_clock};
 //bouton
 const int bouton = 2;
+
+
 //ecran lcd
-rgb_lcd lcd;
+LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 
 //// valeurs des pins
@@ -55,7 +56,7 @@ char code[] = "00000000";
 //variables d'etat du jeu
 int erreur = 0;
 int victoire = 0;
-int perdu = 0;
+int perduTemps = 0;
 // int state = 0;
 
 int last_seed = -1;
@@ -64,15 +65,51 @@ void button_press() {
     button_state = !button_state;
     //lcd.print("bouton");// DO NOT USE
 }
-void setup() {
-    // interrupts();   
-    lcd.begin(16,2);
-    lcd.setRGB(50,50,50);
+
+
+
+void init_lcd() {
+    // initialisation lcd avec test
+    lcd.init();
+    lcd.backlight();
     lcd.setCursor(0,0);
+}
+
+
+
+
+//PARTIE I2C
+
+int MasterSend = 5;
+int MasterReceive = 0;
+
+void receiveEvent(int dfgh){
+  MasterReceive=Wire.read();
+}
+
+void checkChrono(){
+  if (MasterReceive==10) {perduTemps=1;}
+}
+
+
+
+
+void setup() {
+    //PARTIE I2C
+    Wire.begin();
+    delay(3000);
+    MasterSend=50; //50 = partie commence
+    Wire.beginTransmission(8);
+    Wire.write(MasterSend);
+    Wire.endTransmission();
+    
+    // interrupts();  
+    init_lcd();
     //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
     randomSeed(analogRead(7));
     attachInterrupt(digitalPinToInterrupt(bouton), button_press, CHANGE);
 }
+
 
 void loop() {
     // generate a seed to choose which function to launch
@@ -109,6 +146,12 @@ void loop() {
             // }
             default: { break; }
         }
+    }
+    if(victoire==1){
+      MasterSend=20; //20 = partie gagnée
+      Wire.beginTransmission(8);
+      Wire.write(MasterSend);
+      Wire.endTransmission();
     }
     last_seed = seed;
     module_finished = false;

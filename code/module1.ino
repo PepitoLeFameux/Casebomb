@@ -144,16 +144,27 @@ void gencombinaison(int combinaison[], int llettres[], int lchiffres[]) {
     else if (dans("B", code) == 1 && dans("P", code) == 1) { combinaison[4] = chiffreE4(); }
 }
 
+void lcd_clean() {
+    for (int i = 0; i < 1; i ++) {
+        for (int j = 0; j < 16; j ++){
+            lcd.setCursor(j,i);
+            lcd.print(" ");
+        }
+    }
+}
+
 void button_pressed() {
     //si jamais le joueur a perdu, ne rien faire
-    if (perduTemps != 1) { 
-
+    if (perduTemps != 1) {
+        lcd_clean();
         // assignation des valeurs de chaque port en fonction du branchement des cables 
-        lcd.setCursor(0,1);
         for (int i = 0; i < 5; i ++) {
             float voltage = analogRead(list_cables[i]) * 5.0 / 1023.0;// mesure le voltage de chaque port 
             resultats[i] = numero(voltage);// assigne un numéro au port en fonction du voltage du cables qui lui est branché
-            lcd.print(combinaison[i]);// affiche les résultats attendus //debug
+            lcd.setCursor(i,0);
+            lcd.print(combinaison[i]);// affiche la combinaison voulu //debug
+            lcd.setCursor(i,1);
+            lcd.print(resultats[i]);// affiche les résultats lut //debug
         }
 
         //place le curseur  juste après le code

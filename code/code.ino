@@ -76,6 +76,35 @@ void init_lcd() {
 }
 
 
+void init_leds() {
+    //allume les LEDs qui sont activées
+    for (int i = 0; i < 3; i ++) {//list_LEDs[i]
+        *list_value_LED[i] = random()%2;
+        if (*list_value_LED[i] == 1) { analogWrite(*list_LEDs[i], 30); }
+    }
+}
+
+
+void init_pins() {
+    //communication foireuse entre les arduinos
+    //pinMode(ardui_out, OUTPUT);
+    //pinMode(ardui_in, INPUT);
+    
+    //bouton module cables/principale
+    pinMode(bouton, INPUT_PULLUP);
+
+    //cables module cables
+    pinMode(cable1, INPUT);
+    pinMode(cable2, INPUT);
+    pinMode(cable3, INPUT);
+    pinMode(cable4, INPUT);
+    pinMode(cable5, INPUT);
+
+    // les 3 LED principales
+    pinMode(ledNSA, OUTPUT);
+    pinMode(ledMSA, OUTPUT);
+    pinMode(ledFRK, OUTPUT);
+}
 
 
 //PARTIE I2C

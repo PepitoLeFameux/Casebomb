@@ -1,34 +1,3 @@
-const char DEBUG[] = ['A','B','C','D','E']
-
-void init_leds() {
-    //allume les LEDs qui sont activées
-    for (int i = 0; i < 3; i ++) {//list_LEDs[i]
-        *list_value_LED[i] = random()%2;
-        if (*list_value_LED[i] == 1) { analogWrite(*list_LEDs[i], 30); }
-    }
-}
-
-void init_pins() {
-    //communication foireuse entre les arduinos
-    //pinMode(ardui_out, OUTPUT);
-    //pinMode(ardui_in, INPUT);
-    
-    //bouton module cables/principale
-    pinMode(bouton, INPUT_PULLUP);
-
-    //cables module cables
-    pinMode(cable1, INPUT);
-    pinMode(cable2, INPUT);
-    pinMode(cable3, INPUT);
-    pinMode(cable4, INPUT);
-    pinMode(cable5, INPUT);
-
-    // les 3 LED principales
-    pinMode(ledNSA, OUTPUT);
-    pinMode(ledMSA, OUTPUT);
-    pinMode(ledFRK, OUTPUT);
-}
-
 // permet d'associer une tension au numéro du cable branché
 int numero(float tension) {
     if (tension < 0.1) { return 0; }
@@ -194,7 +163,9 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
 
     creecode(&llettres, &lchiffres, &lettres, &chiffres);   
     // gencombinaison(combinaison, llettres, lchiffres);
-    combinaison = [0, 0, 0, 0, 0];
+    for(int i = 1 ; i < 6; i ++) {
+      combinaison[i] = 0;
+    }
     // combinaison = [1, 2, 3, 4, 5];
 
     //envoie un signal à l'arduino 2
@@ -203,13 +174,14 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     //digitalWrite(ardui_out, LOW);
     
     //affiche le code erreur
+    lcd.setCursor(0,0);
     lcd.print(code);
     lcd.setCursor(0,1);
     //affiche la combinaison correcte (debug)
     for (int i = 0; i < 5; i ++) {
         lcd.print(combinaison[i]);
-        lcd.print(DEBUG[i]);
-        lcd.print(" ");
+        //lcd.print(DEBUG[i]);
+        //lcd.print(" ");
     }
     unsigned long previousMillis = 0;
     unsigned long temps_ms; 

@@ -11,7 +11,8 @@ const int cable2 = A1;// 3.00V
 const int cable3 = A2;// 4.10V
 const int cable4 = A3;// 4.50V
 const int cable5 = A4;// 4.70V
-const int *list_cables[] = {&cable1, &cable2, &cable3, &cable4, &cable5};
+//const int *list_cables[] = {&cable1, &cable2, &cable3, &cable4, &cable5};
+const int list_cables[] = {A0, A1, A2, A3, A4};
 // LEDs
 const int ledNSA = 11;// pinledNSA
 const int ledMSA = 10;
@@ -76,35 +77,6 @@ void init_lcd() {
 }
 
 
-void init_leds() {
-    //allume les LEDs qui sont activées
-    for (int i = 0; i < 3; i ++) {//list_LEDs[i]
-        *list_value_LED[i] = random()%2;
-        if (*list_value_LED[i] == 1) { analogWrite(*list_LEDs[i], 30); }
-    }
-}
-
-
-void init_pins() {
-    //communication foireuse entre les arduinos
-    //pinMode(ardui_out, OUTPUT);
-    //pinMode(ardui_in, INPUT);
-    
-    //bouton module cables/principale
-    pinMode(bouton, INPUT_PULLUP);
-
-    //cables module cables
-    pinMode(cable1, INPUT);
-    pinMode(cable2, INPUT);
-    pinMode(cable3, INPUT);
-    pinMode(cable4, INPUT);
-    pinMode(cable5, INPUT);
-
-    // les 3 LED principales
-    pinMode(ledNSA, OUTPUT);
-    pinMode(ledMSA, OUTPUT);
-    pinMode(ledFRK, OUTPUT);
-}
 
 
 //PARTIE I2C
@@ -125,6 +97,7 @@ void checkChrono(){
 
 void setup() {
     //PARTIE I2C
+    Serial.begin(9600);
     Wire.begin();
     delay(3000);
     MasterSend=50; //50 = partie commence

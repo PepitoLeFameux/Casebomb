@@ -95,11 +95,11 @@ int MasterReceive = 0;
 //}
 
 void checkChrono(){
-  Wire.requestFrom(8, 1);    // request 6 bytes from slave device #8
-
+  Wire.requestFrom(8, 1);    // request 8 bytes from slave device #8
+  
   perduTemps = Wire.read(); // receive a byte as character
+  Serial.println(Wire.available());         // print the character
   Serial.println(perduTemps);         // print the character
-
   delay(100);
 }
 
@@ -108,21 +108,23 @@ void checkChrono(){
 
 
 void setup() {
-    //PARTIE I2C
-    Serial.begin(9600);
-    Wire.begin();
-    delay(3000);
-    MasterSend=50; //50 = partie commence
-    Wire.beginTransmission(8);
-    Wire.write(MasterSend);
-    Wire.endTransmission();
-
 // interrupts();  
     init_lcd();
     //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
     randomSeed(analogRead(7));
     attachInterrupt(digitalPinToInterrupt(bouton), button_press, CHANGE);
+    
+    //PARTIE I2C
+    Wire.begin();
+    Wire.setClock(100000);
+    Serial.begin(9600);
+    delay(3000);
+    MasterSend=50; //50 = partie commence
+    Wire.beginTransmission(8);
+    Wire.write(MasterSend);
+    Wire.endTransmission();
 }
+
 
 
 void loop() {
@@ -163,6 +165,7 @@ void loop() {
     }
     if(victoire==1){
       MasterSend=20; //20 = partie gagnée
+      Serial.print("victoire");
       Wire.beginTransmission(8);
       Wire.write(MasterSend);
       Wire.endTransmission();

@@ -33,9 +33,9 @@ extern LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 //// valeurs des pins
 // LEDs
-extern int NSA;
-extern int MSA;
-extern int FRK;
+int NSA;
+int MSA;
+int FRK;
 extern int *list_value_LED[] = {&NSA, &MSA, &FRK};// [value_NSA, value_MSA, value_FRK]
 // bouton
 extern int button_state = false;
@@ -49,7 +49,7 @@ extern int combinaison[] = {0,0,0,0,0}; //combinaison correcte
 extern int lchiffres[] = {0,0,0,0,0,0,0,0};
 extern int llettres[] = {0,0,0,0,0,0,0,0};
 extern int chiffres;
-extern int lettres;
+int lettres;
 
 extern bool module_finished = false;
 extern char code[] = "00000000";

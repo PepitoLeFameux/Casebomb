@@ -95,12 +95,20 @@ int MasterReceive = 0;
 //}
 
 void checkChrono(){
-  Wire.requestFrom(8, 1);    // request 8 bytes from slave device #8
+  Wire.requestFrom(8, 6);    // request 6 bytes from slave device #8
+
+  while (Wire.available()) { // slave may send less than requested
+    char c = Wire.read(); // receive a byte as character
+    Serial.print(c);         // print the character
+  }
+
+//   delay(500);
+//   Wire.requestFrom(8, 1);    // request 8 bytes from slave device #8
   
-  perduTemps = Wire.read(); // receive a byte as character
-  Serial.println(Wire.available());         // print the character
-  Serial.println(perduTemps);         // print the character
-  delay(100);
+//   perduTemps = Wire.read(); // receive a byte as character
+//   Serial.println(Wire.available());         // print the character
+//   Serial.println(perduTemps);         // print the character
+//   delay(100);
 }
 
 

@@ -201,12 +201,16 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
         lcd.print(combinaison[i]);
     }
     unsigned long previousMillis = 0;
+    unsigned long previousMillis2 = 0;
     unsigned long temps_ms; 
     const unsigned long interval = 200; // constante à 1000ms = 1s, ici 200ms
 
     while (erreur < 3 && victoire == 0 && perduTemps!=10) {
         temps_ms = millis();
-        checkChrono();
+        if (temps_ms - previousMillis2 > interval) {
+            checkChrono();
+            previousMillis2 = temps_ms;
+        }
         if (button_state) {
             if(temps_ms - previousMillis >= interval) {
                 // lcd.print("aaaaaaa"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
@@ -219,7 +223,7 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     //en fin de partie, si perdu(compte à rebours) ou 3 erreurs
     if (erreur == 3 || perduTemps == 10) {
         
-        MasterSend=10; //10 = partie perdue
+        MasterSend = 10; // 10 = partie perdue
         Wire.beginTransmission(8);
         Wire.write(MasterSend);
         Wire.endTransmission();

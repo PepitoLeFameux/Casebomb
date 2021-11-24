@@ -26,10 +26,12 @@ rgb_lcd lcd;
 
 void receiveEvent(int combien) { //Fonction appelée lorsque l'esclave recoit un signal
     SlaveReceived = Wire.read();
+    Serial.print("received data");
 }
 
 void requestEvent() { // fonction appelée lorsque l'esclave envoie un signal
     Wire.write(SlaveSend);
+    Serial.print("sending data");
 }
 
 void setup() {

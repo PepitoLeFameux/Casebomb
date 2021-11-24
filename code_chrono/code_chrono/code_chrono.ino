@@ -26,18 +26,20 @@ rgb_lcd lcd;
 
 void receiveEvent(int combien) { //Fonction appelée lorsque l'esclave recoit un signal
     SlaveReceived = Wire.read();
-    Serial.print("received data" + SlaveReceiveds);
+    Serial.println("received data");
+    Serial.println(SlaveReceived);
 }
 
 void requestEvent() { // fonction appelée lorsque l'esclave envoie un signal
     Wire.write(SlaveSend);
-    Serial.print("sending data" + SlaveSend);
+    Serial.println("sending data");
+    Serial.println(SlaveSend);
 }
 
 void setup() {
     Wire.begin(8);
     Wire.setClock(100000);
-
+    Serial.begin(9600);
     lcd.begin(16, 2);
     lcd.setRGB(colorR, colorG, colorB);
     lcd.setCursor(0, 0);
@@ -72,7 +74,7 @@ void loop() {
             lcd.print(secondes);
         } else {
             lcd.print(0);
-            lcd.print(secondes + "           ");
+            lcd.print(secondes);
         }
 
         if (!(colorG == 0 && colorR == 255) && secondeAvant != secondes) {
@@ -84,13 +86,13 @@ void loop() {
 
         if (minutes == 0 && secondes == 0) {
             fini = true;
-            Serial.print("timer off");
+            Serial.println("timer off");
             SlaveSend = 10;
         }
     }
 
     if (SlaveReceived == 10 || fini == true) { //affiche message de defaite
-        Serial.print("game end");
+        Serial.println("game end");
         //SlaveSend = 10;
         lcd.setRGB(255, 0, 0);
         lcd.setCursor(0, 0);
@@ -100,7 +102,7 @@ void loop() {
     }
 
     if (SlaveReceived == 20) {
-        Serial.print("game victory");
+        Serial.println("game victory");
         lcd.setRGB(50, 200, 50);
         lcd.setCursor(0, 0);
         lcd.print("      Victoire      ");

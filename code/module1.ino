@@ -226,7 +226,8 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
         Wire.beginTransmission(8);
         Wire.write(MasterSend);
         Wire.endTransmission();
-        Serial.println("sending " + MasterSend);
+        Serial.println("sending:");
+        Serial.println(MasterSend);
 
         lcd.setCursor(0,0);
         lcd.print("     Perdu      ");
@@ -236,6 +237,7 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     
     //sinon victoire
     else {
+        Serial.println("victoire");
         lcd.setCursor(0,0);
         lcd.print("  Desamorcage   ");
         lcd.setCursor(0,1);

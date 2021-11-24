@@ -26,16 +26,16 @@ rgb_lcd lcd;
 
 void receiveEvent(int combien) { //Fonction appelée lorsque l'esclave recoit un signal
     SlaveReceived = Wire.read();
-    Serial.println("received data " + SlaveReceived);
-    // Serial.println("received data ");
-    // Serial.println(SlaveReceived);
+    // Serial.println("received data " + SlaveReceived);
+    Serial.println("received data:");
+    Serial.println(SlaveReceived);
 }
 
 void requestEvent() { // fonction appelée lorsque l'esclave envoie un signal
     Wire.write(SlaveSend);
-    Serial.println("sending data " + SlaveSend);
-    // Serial.println("sending data ");
-    // Serial.println(SlaveSend);
+    // Serial.println("sending data " + SlaveSend);
+    Serial.println("sending data:");
+    Serial.println(SlaveSend);
 }
 
 void setup() {

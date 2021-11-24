@@ -6,58 +6,58 @@
 
 //// pins
 //cables
-const int cable1 = A0;// 2.50V
-const int cable2 = A1;// 3.00V
-const int cable3 = A2;// 4.10V
-const int cable4 = A3;// 4.50V
-const int cable5 = A4;// 4.70V
+extern const int cable1 = A0;// 2.50V
+extern const int cable2 = A1;// 3.00V
+extern const int cable3 = A2;// 4.10V
+extern const int cable4 = A3;// 4.50V
+extern const int cable5 = A4;// 4.70V
 //const int *list_cables[] = {&cable1, &cable2, &cable3, &cable4, &cable5};
-const int list_cables[] = {A0, A1, A2, A3, A4};
+extern const int list_cables[] = {A0, A1, A2, A3, A4};
 // LEDs
-const int ledNSA = 11;// pinledNSA
-const int ledMSA = 10;
-const int ledFRK = 9;
-const int *list_LEDs[] = {&ledNSA, &ledMSA, &ledFRK};
+extern const int ledNSA = 11;// pinledNSA
+extern const int ledMSA = 10;
+extern const int ledFRK = 9;
+extern const int *list_LEDs[] = {&ledNSA, &ledMSA, &ledFRK};
 // arduino
 //const int ardui_in = 53;
 //const int ardui_out = 51;
 //const int ardui_clock = 40;
 //const int *list_ardui[] = {&ardui_in, &ardui_out, &ardui_clock};
 //bouton
-const int bouton = 2;
+extern const int bouton = 2;
 
 
 //ecran lcd
-LiquidCrystal_I2C lcd(0x27, 20, 4);
+extern LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 
 //// valeurs des pins
 // LEDs
-int NSA;
-int MSA;
-int FRK;
-int *list_value_LED[] = {&NSA, &MSA, &FRK};// [value_NSA, value_MSA, value_FRK]
+extern int NSA;
+extern int MSA;
+extern int FRK;
+extern int *list_value_LED[] = {&NSA, &MSA, &FRK};// [value_NSA, value_MSA, value_FRK]
 // bouton
-int button_state = false;
+extern int button_state = false;
 
 
 //// autres
 // initialisation des variables
-int resultats[] = {0,0,0,0,0}; //combinaison rentrée
-int combinaison[] = {0,0,0,0,0}; //combinaison correcte
+extern int resultats[] = {0,0,0,0,0}; //combinaison rentrée
+extern int combinaison[] = {0,0,0,0,0}; //combinaison correcte
 
-int lchiffres[] = {0,0,0,0,0,0,0,0};
-int llettres[] = {0,0,0,0,0,0,0,0};
-int chiffres;
-int lettres;
+extern int lchiffres[] = {0,0,0,0,0,0,0,0};
+extern int llettres[] = {0,0,0,0,0,0,0,0};
+extern int chiffres;
+extern int lettres;
 
-bool module_finished = false;
-char code[] = "00000000";
+extern bool module_finished = false;
+extern char code[] = "00000000";
 
 //variables d'etat du jeu
-int erreur = 0;
-int victoire = 0;
-int perduTemps = 0;
+extern int erreur = 0;
+extern int victoire = 0;
+extern int perduTemps = 0;
 // int state = 0;
 
 int last_seed = -1;
@@ -81,8 +81,8 @@ void init_lcd() {
 
 //PARTIE I2C
 
-int MasterSend = 5;
-int MasterReceive = 0;
+extern int MasterSend = 5;
+extern int MasterReceive = 0;
 
 //void receiveEvent(int dfgh){
 //  MasterReceive=Wire.read();
@@ -99,7 +99,9 @@ void checkChrono(){
     Serial.println("trying to receive data");
     while (Wire.available()) { // slave may send less than requested
         char c = Wire.read(); // receive a byte as character
-        Serial.println("Master, received data: " + c);         // print the character
+        // Serial.println("Master, received data: " + c);         // print the character
+        Serial.println("Master, received data:");
+        Serial.println(c);
     }
 
 //   delay(500);
@@ -131,7 +133,8 @@ void setup() {
     Wire.beginTransmission(8);
     Wire.write(MasterSend);
     Wire.endTransmission();
-    Serial.println("sending " + MasterSend);
+    Serial.println("sending:");
+    Serial.println(MasterSend);
 }
 
 
@@ -178,7 +181,8 @@ void loop() {
         Wire.beginTransmission(8);
         Wire.write(MasterSend);
         Wire.endTransmission();
-        Serial.println("sending " + MasterSend);
+        Serial.println("sending:");
+        Serial.println(MasterSend);
     }
     last_seed = seed;
     module_finished = false;

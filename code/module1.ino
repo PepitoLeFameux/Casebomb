@@ -226,6 +226,7 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
         Wire.beginTransmission(8);
         Wire.write(MasterSend);
         Wire.endTransmission();
+        Serial.println("sending " + MasterSend);
 
         lcd.setCursor(0,0);
         lcd.print("     Perdu      ");

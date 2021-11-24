@@ -153,7 +153,6 @@ void button_pressed() {
             Serial.println("\nX");
             Serial.println(voltage);
             resultats[i] = numero(voltage);// assigne un numéro au port en fonction du voltage du cables qui lui est branché
-            lcd.print(resultats[i]);// affiche les résultats attendus //debug
         }
         lcd.setCursor(0,1);
         for (int i = 0; i < 5; i ++) {

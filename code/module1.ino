@@ -94,8 +94,8 @@ void gencombinaison(int combinaison[], int llettres[], int lchiffres[]) {
     else if ( ( NSA == 1 || FRK == 1 ) && llettres[6] == 1 ) { combinaison[0] = 3; }
     //si le code comporte un 2 -> branche au 5
     else if (dans("2",code) == 1 ) { combinaison[0] = 5; }
-    //sinon branche au 4
-    else { combinaison[0] = 4; }
+    //sinon branche au 3
+    else { combinaison[0] = 3; }
 
       //CABLE B
     //si MSA allumée -> branche au 1
@@ -184,6 +184,12 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     init_pins();
     init_leds();
 
+    Serial.println(MSA);
+    Serial.println(NSA);
+    Serial.println(FRK);
+
+    
+
     creecode(&llettres, &lchiffres, &lettres, &chiffres);   
     gencombinaison(combinaison, llettres, lchiffres);
     
@@ -203,11 +209,10 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     unsigned long previousMillis2 = 0;
     unsigned long temps_ms; 
     const unsigned long interval = 200; // constante à 1000ms = 1s, ici 200ms
-    const unsigned long interval2 = 1000; // constante à 1000ms = 1s, ici 200ms
 
-    while ((erreur < 3 && victoire == 0) && perduTemps!=10) {
+    while (erreur < 3 && victoire == 0 && perduTemps!=10) {
         temps_ms = millis();
-        if (temps_ms - previousMillis2 > interval2) {
+        if (temps_ms - previousMillis2 > interval) {
             checkChrono();
             previousMillis2 = temps_ms;
         }
@@ -227,8 +232,8 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
         Wire.beginTransmission(8);
         Wire.write(MasterSend);
         Wire.endTransmission();
-        Serial.println("sending:");
-        Serial.println(MasterSend);
+       // Serial.println("sending:");
+       //Serial.println(MasterSend);
 
         lcd.setCursor(0,0);
         lcd.print("     Perdu      ");

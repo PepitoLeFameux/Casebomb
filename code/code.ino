@@ -98,7 +98,7 @@ void checkChrono(){
     Wire.requestFrom(8, 6);    // request 6 bytes from slave device #8
     Serial.println("trying to receive data");
     while (Wire.available()) { // slave may send less than requested
-        char c = Wire.read(); // receive a byte as character
+        int c = Wire.read(); // receive a byte as character
         // Serial.println("Master, received data: " + c);         // print the character
         Serial.println("Master, received data:");
         Serial.println(c);

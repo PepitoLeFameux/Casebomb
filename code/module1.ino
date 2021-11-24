@@ -203,10 +203,11 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     unsigned long previousMillis2 = 0;
     unsigned long temps_ms; 
     const unsigned long interval = 200; // constante à 1000ms = 1s, ici 200ms
+    const unsigned long interval2 = 1000; // constante à 1000ms = 1s, ici 200ms
 
-    while (erreur < 3 && victoire == 0 && perduTemps!=10) {
+    while ((erreur < 3 && victoire == 0) && perduTemps!=10) {
         temps_ms = millis();
-        if (temps_ms - previousMillis2 > interval) {
+        if (temps_ms - previousMillis2 > interval2) {
             checkChrono();
             previousMillis2 = temps_ms;
         }

@@ -26,5 +26,6 @@ int libre() {
     int lib = 0; 
     for (int i = 0; i < 5; i++) { 
         if (combinaison[i] == 0) { lib++; } 
-    } return lib; 
+    }
+    return lib; 
 }

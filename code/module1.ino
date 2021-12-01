@@ -29,7 +29,7 @@ void init_pins() {
 
 // permet d'associer une tension au numéro du cable branché
 int numero(float tension) {
-    if (tension < 0.30) { return 0; }
+    if (tension < 0.4) { return 0; }
     if (tension < 0.8) { return 5; }
     if (tension < 1.5) { return 4; }
     if (tension < 2.3) { return 3; }
@@ -132,14 +132,16 @@ void gencombinaison(int combinaison[], int llettres[], int lchiffres[]) {
     else { combinaison[3] = 0; }
 
       //CABLE E
-    //si plus de 1 port vides -> ne branche pas
-    if (libre() > 1) { combinaison[4] = 0; }
+    //si C et 8 dans le code -> ne branche pas
+    if (dans("C",code) == 1 && dans("8",code)) { combinaison[4] = 0; }
     //si les ports 1,3,5 sont occupés -> branche au 4
-    else if (cdans(1,combinaison) == 1 && cdans(3,combinaison) == 1 && cdans(5,combinaison) == 1) { combinaison[4] = 4; }
+    else if (cdans(1,combinaison) == 1 && cdans(3,combinaison) == 1 && cdans(5,combinaison) == 1 && pasbranche(4) == 1) { combinaison[4] = 4; }
     //si le port 5 est vide -> branche au 5, sinon si le 1 est vide -> branche au 1
     else if (condE4() == 1 || condE4() == 5 ) { combinaison[4] = condE4(); }
     //si le code comporte un B et un P -> branche au dernier port (le seul pas branché)
-    else if (dans("B",code) == 1 && dans("P",code) == 1) { combinaison[4] = chiffreE4(); }
+    else if (dans("B",code) == 1 || dans("P",code) == 1) { combinaison[4] = chiffreE4(); }
+    //sinon ne pas brancher
+    else { combinaison[3] = 0; }
 }
 
 void button_pressed() {

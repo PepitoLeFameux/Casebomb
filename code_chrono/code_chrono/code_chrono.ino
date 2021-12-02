@@ -1,9 +1,9 @@
+
 #include <Wire.h> // appel des bibliotheques
 #include "rgb_lcd.h"
 
 int SlaveReceived = 12;
 int SlaveSend = 5;
-//extern int SlaveSend2 = 9;
 
 int colorR = 0;
 int colorG = 255;
@@ -12,7 +12,7 @@ int colorB = 0;
 unsigned long tempsDepart;
 unsigned long temps;
 unsigned long tempsEcoule;
-unsigned long tempsMax = 300000; //300000 ms = 5 min
+unsigned long tempsMax = 10000; //300000 ms = 5 min
 int secondeAvant = 0;
 
 bool fini = false;
@@ -51,7 +51,6 @@ void setup() {
 void loop() {
     //Valeur recue est 20 si victoire de la part de la maitre,10 pour une défaite et 50 pour départ chrono
     //Valeur envoyée 10 quand chrono fini
-    if (!fini) {
     if (SlaveReceived == 50 && fini == false) {
         if (depart == 0) {
             tempsDepart = millis();
@@ -92,25 +91,22 @@ void loop() {
     }
 
     if (SlaveReceived == 10 || fini == true) { //affiche message de defaite
-        //Serial.println("game end");
+        Serial.println("game end");
         //SlaveSend = 10;
         lcd.setRGB(255, 0, 0);
         lcd.setCursor(0, 0);
-        lcd.print("      BOUM      ");
+        lcd.print("      Perdu      ");
         lcd.setCursor(0, 1);
         lcd.print("                 ");
         delay(1000);
     }
 
     if (SlaveReceived == 20) {
-        //Serial.println("game victory");
-        lcd.setRGB(0, 200, 0);
-//        lcd.setCursor(0, 0);
-//        lcd.print("      Victoire      ");
-//        lcd.setCursor(0, 1);
-//        lcd.print("");
-     
+        Serial.println("game victory");
+        lcd.setRGB(50, 200, 50);
+        lcd.setCursor(0, 0);
+        lcd.print("      Victoire      ");
+        lcd.setCursor(0, 1);
+        lcd.print("Desamorcage reussi");
     }
-    }
-    delay(100);
 }

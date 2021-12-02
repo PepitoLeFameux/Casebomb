@@ -1,8 +1,8 @@
 void init_leds() {
-    //allume les LEDs qui sont activées
-    for (int i = 0; i < 3; i ++) {//list_LEDs[i]
-        *list_value_LED[i] = random()%2;
-    }
+  randomSeed(digitalRead(6));
+    NSA = random()%2;
+    MSA = random()%2;
+    FRK = random()%2;
 }
 
 void init_pins() {

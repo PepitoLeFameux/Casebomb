@@ -120,12 +120,19 @@ void setup() {
 // interrupts();  
     init_lcd();
     init_leds();
+    Serial.begin(9600);
 
     //communication des LEDs avec la Uno : 111 si les 3 sont allumées, 101 si NSA et FRK sont allumées
     MasterSend=1;
+    Serial.println("hello");
+    Serial.println(MasterSend);
     if(NSA==1){MasterSend*= 2;}
+    Serial.println(MasterSend);
     if(MSA==1){MasterSend*= 3;}
+    Serial.println(MasterSend);
     if(FRK==1){MasterSend*= 5;}
+    Serial.println(MasterSend);
+    
     Wire.beginTransmission(8);
     Wire.write(MasterSend);
     Wire.endTransmission();
@@ -137,7 +144,6 @@ void setup() {
     //PARTIE I2C
     Wire.begin();
     Wire.setClock(100000);
-    Serial.begin(9600);
     delay(3000);
     MasterSend=50; //50 = partie commence
     Wire.beginTransmission(8);

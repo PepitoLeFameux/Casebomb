@@ -141,7 +141,7 @@ void gencombinaison(int combinaison[], int llettres[], int lchiffres[]) {
     //si le code comporte un B et un P -> branche au dernier port (le seul pas branché)
     else if (dans("B",code) == 1 || dans("P",code) == 1) { combinaison[4] = chiffreE4(); }
     //sinon ne pas brancher
-    else { combinaison[3] = 0; }
+    else { combinaison[4] = 0; }
 }
 
 void button_pressed() {

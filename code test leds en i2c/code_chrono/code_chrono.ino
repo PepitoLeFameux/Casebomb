@@ -61,9 +61,9 @@ void setup() {
 }
 
 void loop() {
-
+    
+    if (fini != true) {
     if(SlaveReceived>0 && LEDs == false){
-      delay(50);
       NSA = SlaveReceived % 2 +1;
       MSA = SlaveReceived % 3 +1;
       FRK = SlaveReceived % 5 +1;      
@@ -135,4 +135,6 @@ void loop() {
         lcd.setCursor(0, 1);
         lcd.print("Desamorcage reussi");
     }
+    }
+    delay(100);
 }

@@ -1,9 +1,9 @@
+
 #include <Wire.h> // appel des bibliotheques
 #include "rgb_lcd.h"
 
 int SlaveReceived = 12;
 int SlaveSend = 5;
-//extern int SlaveSend2 = 9;
 
 int colorR = 0;
 int colorG = 255;
@@ -12,7 +12,7 @@ int colorB = 0;
 unsigned long tempsDepart;
 unsigned long temps;
 unsigned long tempsEcoule;
-unsigned long tempsMax = 300000; //300000 ms = 5 min
+unsigned long tempsMax = 10000; //300000 ms = 5 min
 int secondeAvant = 0;
 
 bool fini = false;
@@ -24,6 +24,15 @@ int led = 9;
 int depart = 0;
 rgb_lcd lcd;
 
+bool LEDs = false;
+int NSA;
+int MSA;
+int FRK;
+int ledNSA=11;
+int ledMSA=12;
+int ledFRK=13;
+extern int *list_value_LED[] = {&NSA, &MSA, &FRK};
+
 void receiveEvent(int combien) { //Fonction appelée lorsque l'esclave recoit un signal
     SlaveReceived = Wire.read();
     // Serial.println("received data " + SlaveReceived);
@@ -33,6 +42,9 @@ void receiveEvent(int combien) { //Fonction appelée lorsque l'esclave recoit un
 
 void requestEvent() { // fonction appelée lorsque l'esclave envoie un signal
     Wire.write(SlaveSend);
+    // Serial.println("sending data " + SlaveSend);
+    Serial.println("sending data:");
+    Serial.println(SlaveSend);
 }
 
 void setup() {
@@ -49,10 +61,21 @@ void setup() {
 }
 
 void loop() {
-    //Valeur recue est 20 si victoire de la part de la maitre,10 pour une défaite et 50 pour départ chrono
-    //Valeur envoyée 10 quand chrono fini
-    if (!fini) {
-    if (SlaveReceived == 50 && fini == false) {
+
+    if(SlaveReceived>0 && LEDs == false){
+      delay(50);
+      NSA = SlaveReceived % 2 +1;
+      MSA = SlaveReceived % 3 +1;
+      FRK = SlaveReceived % 5 +1;      
+      if (NSA==1){digitalWrite(ledNSA,OUTPUT);}
+      if (MSA==1){digitalWrite(ledMSA,OUTPUT);}
+      if (FRK==1){digitalWrite(ledFRK,OUTPUT);}
+      LEDs = true;
+    }
+
+
+    
+    if (SlaveReceived == 50 && fini == false && LEDs == true) {
         if (depart == 0) {
             tempsDepart = millis();
             depart = 1;
@@ -90,27 +113,26 @@ void loop() {
             SlaveSend = 10;
         }
     }
-
-    if (SlaveReceived == 10 || fini == true) { //affiche message de defaite
-        //Serial.println("game end");
+    
+    //Valeur recue est 20 si victoire de la part de la maitre,10 pour une défaite et 50 pour départ chrono
+    //Valeur envoyée 10 quand chrono fini
+    if ((SlaveReceived == 10 || fini == true )&& LEDs == true) { //affiche message de defaite
+        Serial.println("game end");
         //SlaveSend = 10;
         lcd.setRGB(255, 0, 0);
         lcd.setCursor(0, 0);
-        lcd.print("      BOUM      ");
+        lcd.print("      Perdu      ");
         lcd.setCursor(0, 1);
         lcd.print("                 ");
         delay(1000);
     }
 
-    if (SlaveReceived == 20) {
-        //Serial.println("game victory");
-        lcd.setRGB(0, 200, 0);
-//        lcd.setCursor(0, 0);
-//        lcd.print("      Victoire      ");
-//        lcd.setCursor(0, 1);
-//        lcd.print("");
-     
+    if (SlaveReceived == 20 && LEDs == true) {
+        Serial.println("game victory");
+        lcd.setRGB(50, 200, 50);
+        lcd.setCursor(0, 0);
+        lcd.print("      Victoire      ");
+        lcd.setCursor(0, 1);
+        lcd.print("Desamorcage reussi");
     }
-    }
-    delay(100);
 }

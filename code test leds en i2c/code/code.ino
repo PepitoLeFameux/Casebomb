@@ -81,7 +81,7 @@ void init_lcd() {
 
 //PARTIE I2C
 
-extern int MasterSend = 5;
+extern int MasterSend = 0;
 extern int MasterReceive = 0;
 
 //void receiveEvent(int dfgh){
@@ -119,6 +119,17 @@ void checkChrono(){
 void setup() {
 // interrupts();  
     init_lcd();
+    init_leds();
+
+    //communication des LEDs avec la Uno : 111 si les 3 sont allumées, 101 si NSA et FRK sont allumées
+    MasterSend=1;
+    if(NSA==1){MasterSend*= 2;}
+    if(MSA==1){MasterSend*= 3;}
+    if(FRK==1){MasterSend*= 5;}
+    Wire.beginTransmission(8);
+    Wire.write(MasterSend);
+    Wire.endTransmission();
+        
     //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
     randomSeed(analogRead(7));
     attachInterrupt(digitalPinToInterrupt(bouton), button_press, CHANGE);

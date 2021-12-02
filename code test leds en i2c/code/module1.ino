@@ -2,7 +2,6 @@ void init_leds() {
     //allume les LEDs qui sont activées
     for (int i = 0; i < 3; i ++) {//list_LEDs[i]
         *list_value_LED[i] = random()%2;
-        if (*list_value_LED[i] == 1) { analogWrite(*list_LEDs[i], 30); }
     }
 }
 
@@ -141,7 +140,7 @@ void gencombinaison(int combinaison[], int llettres[], int lchiffres[]) {
     //si le code comporte un B et un P -> branche au dernier port (le seul pas branché)
     else if (dans("B",code) == 1 || dans("P",code) == 1) { combinaison[4] = chiffreE4(); }
     //sinon ne pas brancher
-    else { combinaison[3] = 0; }
+    else { combinaison[4] = 0; }
 }
 
 void button_pressed() {
@@ -184,10 +183,12 @@ void button_pressed() {
 void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, int chiffres) {
 
     init_pins();
-    init_leds();
 
+    Serial.println("MSA");
     Serial.println(MSA);
+    Serial.println("NSA");
     Serial.println(NSA);
+    Serial.println("FRK");
     Serial.println(FRK);
 
     

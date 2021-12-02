@@ -2,33 +2,56 @@
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 
-#define A10 , A11
+#define DEBUG_SOLUTION      1
+
+#define I2C_ARDUINO_SLAVE   8
+
+#define ETAT_STOP_PARTY_VICTORY   20
+#define ETAT_START_PARTY          50
+#define ETAT_BOOM                 10
+
+
+
+/*
+ * 
+ * 
+ * 
+#define CMD_LED       0x04
+CMD = (FRK<<6) || (MSA <<5) || (NSA<<4) || CMD_LED
+if (CMD && CMD_LED != 0)
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+//#define A10 , A11
 
 //// pins
 //cables
-extern const int cable1 = A0;// 2.50V
-extern const int cable2 = A1;// 3.00V
-extern const int cable3 = A2;// 4.10V
-extern const int cable4 = A3;// 4.50V
-extern const int cable5 = A4;// 4.70V
+const int cable1 = A0;// 2.50V
+const int cable2 = A1;// 3.00V
+const int cable3 = A2;// 4.10V
+const int cable4 = A3;// 4.50V
+const int cable5 = A4;// 4.70V
 //const int *list_cables[] = {&cable1, &cable2, &cable3, &cable4, &cable5};
-extern const int list_cables[] = {A0, A1, A2, A3, A4};
+const int list_cables[] = {A0, A1, A2, A3, A4};
 // LEDs
-extern const int ledNSA = 11;// pinledNSA
-extern const int ledMSA = 10;
-extern const int ledFRK = 9;
-extern const int *list_LEDs[] = {&ledNSA, &ledMSA, &ledFRK};
+const int ledNSA = 11;// pinledNSA
+const int ledMSA = 10;
+const int ledFRK = 9;
+const int *list_LEDs[] = {&ledNSA, &ledMSA, &ledFRK};
 // arduino
 //const int ardui_in = 53;
 //const int ardui_out = 51;
 //const int ardui_clock = 40;
 //const int *list_ardui[] = {&ardui_in, &ardui_out, &ardui_clock};
 //bouton
-extern const int bouton = 2;
+const int bouton = 2;
 
 
 //ecran lcd
-extern LiquidCrystal_I2C lcd(0x27, 20, 4);
+LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 
 //// valeurs des pins
@@ -36,28 +59,29 @@ extern LiquidCrystal_I2C lcd(0x27, 20, 4);
 int NSA;
 int MSA;
 int FRK;
-extern int *list_value_LED[] = {&NSA, &MSA, &FRK};// [value_NSA, value_MSA, value_FRK]
+int *list_value_LED[] = {&NSA, &MSA, &FRK};// [value_NSA, value_MSA, value_FRK]
 // bouton
-extern int button_state = false;
+int button_state = false;
 
 
 //// autres
 // initialisation des variables
-extern int resultats[] = {0,0,0,0,0}; //combinaison rentrée
-extern int combinaison[] = {0,0,0,0,0}; //combinaison correcte
+int resultats[] = {0,0,0,0,0}; //combinaison rentrée
+int combinaison[] = {0,0,0,0,0}; //combinaison correcte
 
-extern int lchiffres[] = {0,0,0,0,0,0,0,0};
-extern int llettres[] = {0,0,0,0,0,0,0,0};
-extern int chiffres;
+int lchiffres[] = {0,0,0,0,0,0,0,0};
+int llettres[] = {0,0,0,0,0,0,0,0};
+int chiffres;
 int lettres;
 
-extern bool module_finished = false;
-extern char code[] = "00000000";
+bool module_finished = false;
+char code[] = "00000000";
 
 //variables d'etat du jeu
-extern int erreur = 0;
-extern int victoire = 0;
-extern int perduTemps = 0;
+int erreur = 0;
+int victoire = 0;
+int perdu = 0;
+int perduTemps = 0;
 // int state = 0;
 
 int last_seed = -1;
@@ -89,22 +113,25 @@ extern int MasterReceive = 0;
 //}
 
 //void checkChrono(){
-//  Wire.requestFrom(8,1);
+//  Wire.requestFrom(I2C_ARDUINO_SLAVE,1);
 //  perduTemps = Wire.read();    // receive a byte as character
 //  Serial.println(perduTemps);         // print the character
 //}
 
 void checkChrono(){
-    Wire.requestFrom(8, 6);    // request 6 bytes from slave device #8
+    Wire.requestFrom(I2C_ARDUINO_SLAVE, 1);    // request 6 bytes from slave device #8
     //Serial.println("trying to receive data");
+    delay(50);
     while (Wire.available()) { // slave may send less than requested
-        int c = Wire.read(); // receive a byte as character
-        //Serial.println("Master, received data:");
-        //Serial.println(c);
+        perduTemps = Wire.read(); // receive a byte as character
+        
     }
+    //Serial.println("Master, received data:");
+    //Serial.println(perduTemps);
 
+    
 //   delay(500);
-//   Wire.requestFrom(8, 1);    // request 8 bytes from slave device #8
+//   Wire.requestFrom(I2C_ARDUINO_SLAVE, 1);    // request 8 bytes from slave device #8
   
 //   perduTemps = Wire.read(); // receive a byte as character
 //   Serial.println(Wire.available());         // print the character
@@ -112,8 +139,43 @@ void checkChrono(){
 //   delay(100);
 }
 
+void stop_game_boom() {
+  // STOP CHRONO
+    Wire.beginTransmission(I2C_ARDUINO_SLAVE);
+    Wire.write(ETAT_BOOM);
+    Wire.endTransmission();
+    // Serial.println("sending:");
+    //Serial.println(MasterSend);
 
+  // AFFICHE GAME OVER
+    lcd.setCursor(0,0);
+    lcd.print("     Perdu      ");
+    lcd.setCursor(0,1);
+    lcd.print(" Recommencer ?  ");
 
+}
+
+void stop_game_victory(){
+    Wire.beginTransmission(I2C_ARDUINO_SLAVE);
+    Wire.write(ETAT_STOP_PARTY_VICTORY);
+    Wire.endTransmission();
+    Serial.println("sending:");
+    Serial.println(MasterSend);
+
+    Serial.println("victoire");
+    lcd.setCursor(0,0);
+    lcd.print("  Desamorcage   ");
+    lcd.setCursor(0,1);
+    lcd.print("    Reussi      ");
+}
+
+void startParty() {
+    Wire.beginTransmission(I2C_ARDUINO_SLAVE);
+    Wire.write(ETAT_START_PARTY);
+    Wire.endTransmission();
+    Serial.println("sending:");
+    Serial.println(MasterSend);
+}
 
 
 void setup() {
@@ -122,6 +184,11 @@ void setup() {
     init_leds();
     Serial.begin(9600);
 
+    //PARTIE I2C
+    Wire.begin();
+    Wire.setClock(100000);
+    delay(3000);
+    
     //communication des LEDs avec la Uno : 111 si les 3 sont allumées, 101 si NSA et FRK sont allumées
     MasterSend=1;
     Serial.println("hello");
@@ -133,24 +200,15 @@ void setup() {
     if(FRK==1){MasterSend*= 5;}
     Serial.println(MasterSend);
     
-    Wire.beginTransmission(8);
+    Wire.beginTransmission(I2C_ARDUINO_SLAVE);
     Wire.write(MasterSend);
     Wire.endTransmission();
         
     //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
     randomSeed(analogRead(7));
     attachInterrupt(digitalPinToInterrupt(bouton), button_press, CHANGE);
-    
-    //PARTIE I2C
-    Wire.begin();
-    Wire.setClock(100000);
-    delay(3000);
-    MasterSend=50; //50 = partie commence
-    Wire.beginTransmission(8);
-    Wire.write(MasterSend);
-    Wire.endTransmission();
-    Serial.println("sending:");
-    Serial.println(MasterSend);
+
+    startParty();
 }
 
 
@@ -192,14 +250,18 @@ void loop() {
         }
     }
     if (victoire == 1) {
-        MasterSend = 20; //20 = partie gagnée
         Serial.print("victoire");
-        Wire.beginTransmission(8);
-        Wire.write(MasterSend);
-        Wire.endTransmission();
-        Serial.println("sending:");
-        Serial.println(MasterSend);
+        stop_game_victory();
+        while(1);
     }
-    last_seed = seed;
-    module_finished = false;
+    else if (perdu=1){
+        Serial.print("perdu");
+        stop_game_boom();
+        while(1);
+    }
+    
+    else {
+      last_seed = seed;
+      module_finished = false;
+    }
 }

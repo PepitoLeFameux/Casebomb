@@ -1,8 +1,16 @@
+extern bool module_finished;
+
 void init_leds() {
-  randomSeed(digitalRead(6));
-    NSA = random()%2;
-    MSA = random()%2;
-    FRK = random()%2;
+    randomSeed(digitalRead(6));
+    NSA = random(0,2);
+    MSA = random(0,2);
+    FRK = random(0,2);
+    Serial.println("NSA");
+    Serial.println(NSA);
+    Serial.println("MSA");
+    Serial.println(MSA);
+    Serial.println("FRK");
+    Serial.println(FRK);
 }
 
 void init_pins() {
@@ -155,11 +163,14 @@ void button_pressed() {
             Serial.println(voltage);
             resultats[i] = numero(voltage);// assigne un numéro au port en fonction du voltage du cables qui lui est branché
         }
+        
+        #if defined(DEBUG_SOLUTION)
         lcd.setCursor(0,1);
         for (int i = 0; i < 5; i ++) {
             lcd.print(combinaison[i]);// affiche les résultats attendus //debug
         }
-
+        #endif
+        
         //place le curseur  juste après le code
         lcd.setCursor(6,1);
 
@@ -184,13 +195,6 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
 
     init_pins();
 
-    Serial.println("MSA");
-    Serial.println(MSA);
-    Serial.println("NSA");
-    Serial.println(NSA);
-    Serial.println("FRK");
-    Serial.println(FRK);
-
     
 
     creecode(&llettres, &lchiffres, &lettres, &chiffres);   
@@ -200,28 +204,39 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     //digitalWrite(ardui_out, HIGH);
     //delay(10);
     //digitalWrite(ardui_out, LOW);
+
     
     //affiche le code erreur
     lcd.print(code);
     lcd.setCursor(0,1);
-    //affiche la combinaison correcte (debug)
-    for (int i = 0; i < 5; i ++) {
-        lcd.print(combinaison[i]);
-    }
+    
+    #if defined(DEBUG_SOLUTION)
+      //affiche la combinaison correcte (debug)
+      for (int i = 0; i < 5; i ++) {
+          lcd.print(combinaison[i]);
+      }
+    #else
+      
+    #endif
+    
     unsigned long previousMillis = 0;
     unsigned long previousMillis2 = 0;
     unsigned long temps_ms; 
     const unsigned long interval = 200; // constante à 1000ms = 1s, ici 200ms
 
-    while (erreur < 3 && victoire == 0 && perduTemps!=10) {
+    while (erreur < 3 && victoire == 0 && perduTemps != ETAT_BOOM) {
         temps_ms = millis();
+
+        // Lire le chrono a interval régulier pour ne pas saturer l'I2C
         if (temps_ms - previousMillis2 > interval) {
             checkChrono();
             previousMillis2 = temps_ms;
         }
+
+        // Regarder le bouton
         if (button_state) {
+            // Anti rebond
             if(temps_ms - previousMillis >= interval) {
-                // lcd.print("aaaaaaa"); // Affiche Loop sur le moniteur série toutes les constantes (10s)
                 button_pressed();
             }
             previousMillis = temps_ms;
@@ -229,30 +244,13 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     }
 
     //en fin de partie, si perdu(compte à rebours) ou 3 erreurs
-    if (erreur == 3 || perduTemps == 10) {
-        
-        MasterSend = 10; // 10 = partie perdue
-        Wire.beginTransmission(8);
-        Wire.write(MasterSend);
-        Wire.endTransmission();
-       // Serial.println("sending:");
-       //Serial.println(MasterSend);
-
-        lcd.setCursor(0,0);
-        lcd.print("     Perdu      ");
-        lcd.setCursor(0,1);
-        lcd.print(" Recommencer ?  ");
-    }
-    
-    //sinon victoire
-    else {
-        Serial.println("victoire");
-        lcd.setCursor(0,0);
-        lcd.print("  Desamorcage   ");
-        lcd.setCursor(0,1);
-        lcd.print("    Reussi      ");
+    if (erreur >= 3 || perduTemps == ETAT_BOOM) {
+        perdu = 1;
+    } else {
+        victoire = 1;
     }
     //coupe le signal envoyé vers l'arduino 2
     //digitalWrite(ardui_out,LOW);
     module_finished = true;
+    Serial.println("je passe");
 }

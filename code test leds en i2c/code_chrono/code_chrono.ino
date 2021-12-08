@@ -100,9 +100,13 @@ void loop() {
         lcd.print(":");
         if (secondes > 9) {
             lcd.print(secondes);
+            lcd.print("                       ");
         } else {
             lcd.print(0);
             lcd.print(secondes);
+            lcd.print("                       ");
+
+            
         }
 
         if (!(colorG == 0 && colorR == 255) && secondeAvant != secondes) {
@@ -126,7 +130,7 @@ void loop() {
         //SlaveSend = 10;
         lcd.setRGB(255, 0, 0);
         lcd.setCursor(0, 0);
-        lcd.print("      Perdu      ");
+        lcd.print("      BOUM      ");
         lcd.setCursor(0, 1);
         lcd.print("                 ");
         delay(1000);
@@ -136,9 +140,9 @@ void loop() {
         Serial.println("game victory");
         lcd.setRGB(50, 200, 50);
         lcd.setCursor(0, 0);
-        lcd.print("      Victoire      ");
-        lcd.setCursor(0, 1);
-        lcd.print("Desamorcage reussi");
+        lcd.print("Temps restant :      ");
+        //lcd.setCursor(0, 1);
+        //lcd.print("  Felicitation   ");
     }
     }
     delay(100);

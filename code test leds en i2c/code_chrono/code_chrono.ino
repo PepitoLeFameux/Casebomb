@@ -81,6 +81,8 @@ void loop() {
 
     
     if (SlaveReceived == 50 && fini == false && LEDs == true) {
+        lcd.setCursor(0, 0);
+        lcd.print("Temps restant :      ");
         if (depart == 0) {
             tempsDepart = millis();
             depart = 1;
@@ -125,7 +127,7 @@ void loop() {
     
     //Valeur recue est 20 si victoire de la part de la maitre,10 pour une défaite et 50 pour départ chrono
     //Valeur envoyée 10 quand chrono fini
-    if ((SlaveReceived == 10 || fini == true )&& LEDs == true) { //affiche message de defaite
+    if ((SlaveReceived == 11 || fini == true )&& LEDs == true) { //affiche message de defaite
         Serial.println("game end");
         //SlaveSend = 10;
         lcd.setRGB(255, 0, 0);

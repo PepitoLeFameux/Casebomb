@@ -190,6 +190,11 @@ void button_pressed() {
     }
 }
 
+void raffichelecode(){
+  lcd.setCursor(0,0);
+  lcd.print(code);
+  lcd.print("        ");
+}
 
 void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, int chiffres) {
 
@@ -208,9 +213,9 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     
     //affiche le code erreur
     lcd.print(code);
-    lcd.setCursor(0,1);
     
     #if defined(DEBUG_SOLUTION)
+    lcd.setCursor(0,1);
       //affiche la combinaison correcte (debug)
       for (int i = 0; i < 5; i ++) {
           lcd.print(combinaison[i]);
@@ -230,6 +235,7 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
         // Lire le chrono a interval régulier pour ne pas saturer l'I2C
         if (temps_ms - previousMillis2 > interval) {
             checkChrono();
+            raffichelecode();
             previousMillis2 = temps_ms;
         }
 

@@ -213,16 +213,23 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
     
     //affiche le code erreur
     lcd.print(code);
-    
-    #if defined(DEBUG_SOLUTION)
+
+        //affiche la bonne combinaison si debug ON
+        
+//    #if defined(DEBUG_SOLUTION)
+//    lcd.setCursor(0,1);
+//      //affiche la combinaison correcte (debug)
+//      for (int i = 0; i < 5; i ++) {
+//          lcd.print(combinaison[i]);
+//      }
+
+        //affiche "Erreurs:" si debug OFF
+        
+//    #else
     lcd.setCursor(0,1);
-      //affiche la combinaison correcte (debug)
-      for (int i = 0; i < 5; i ++) {
-          lcd.print(combinaison[i]);
-      }
-    #else
-      
-    #endif
+    lcd.print("Erreurs:");
+    
+//    #endif
     
     unsigned long previousMillis = 0;
     unsigned long previousMillis2 = 0;

@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 
-#define DEBUG_SOLUTION      1
+#define DEBUG_SOLUTION      
 
 #define I2C_ARDUINO_SLAVE   8
 

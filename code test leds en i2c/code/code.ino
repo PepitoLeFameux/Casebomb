@@ -8,7 +8,7 @@
 
 #define ETAT_STOP_PARTY_VICTORY   20
 #define ETAT_START_PARTY          50
-#define ETAT_BOOM                 10
+#define ETAT_BOOM                 11
 
 
 

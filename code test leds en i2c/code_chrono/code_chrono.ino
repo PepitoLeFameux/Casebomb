@@ -2,7 +2,7 @@
 #include <Wire.h> // appel des bibliotheques
 #include "rgb_lcd.h"
 
-int SlaveReceived = 12;
+int SlaveReceived = 0;
 int SlaveSend = 5;
 
 int colorR = 0;
@@ -12,7 +12,7 @@ int colorB = 0;
 unsigned long tempsDepart;
 unsigned long temps;
 unsigned long tempsEcoule;
-unsigned long tempsMax = 10000; //300000 ms = 5 min
+unsigned long tempsMax = 300000; //300000 ms = 5 min
 int secondeAvant = 0;
 
 bool fini = false;
@@ -42,9 +42,8 @@ void receiveEvent(int combien) { //Fonction appelée lorsque l'esclave recoit un
 
 void requestEvent() { // fonction appelée lorsque l'esclave envoie un signal
     Wire.write(SlaveSend);
-    // Serial.println("sending data " + SlaveSend);
-    Serial.println("sending data:");
-    Serial.println(SlaveSend);
+    //Serial.println("sending data:");
+    //Serial.println(SlaveSend);
 }
 
 void setup() {
@@ -64,12 +63,18 @@ void loop() {
     
     if (fini != true) {
     if(SlaveReceived>0 && LEDs == false){
-      NSA = SlaveReceived % 2 +1;
-      MSA = SlaveReceived % 3 +1;
-      FRK = SlaveReceived % 5 +1;      
-      if (NSA==1){digitalWrite(ledNSA,OUTPUT);}
-      if (MSA==1){digitalWrite(ledMSA,OUTPUT);}
-      if (FRK==1){digitalWrite(ledFRK,OUTPUT);}
+      NSA = SlaveReceived % 2 + 1;
+      MSA = SlaveReceived % 3 + 1;
+      FRK = SlaveReceived % 5 + 1;      
+      if (NSA==1){digitalWrite(ledNSA,HIGH);}
+      Serial.println("NSA");
+      Serial.println(NSA);
+      Serial.println("MSA");
+      Serial.println(MSA);
+      Serial.println("FRK");
+      Serial.println(FRK);
+      if (MSA==1){digitalWrite(ledMSA,HIGH);}
+      if (FRK==1){digitalWrite(ledFRK,HIGH);}
       LEDs = true;
     }
 

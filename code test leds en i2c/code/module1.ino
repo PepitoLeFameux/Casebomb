@@ -1,7 +1,7 @@
 extern bool module_finished;
 
 void init_leds() {
-    randomSeed(digitalRead(6));
+    randomSeed(analogRead(9));
     NSA = random(0,2);
     MSA = random(0,2);
     FRK = random(0,2);

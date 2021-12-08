@@ -180,9 +180,9 @@ void startParty() {
 
 void setup() {
 // interrupts();  
+    Serial.begin(9600);
     init_lcd();
     init_leds();
-    Serial.begin(9600);
 
     //PARTIE I2C
     Wire.begin();
@@ -203,6 +203,8 @@ void setup() {
     Wire.beginTransmission(I2C_ARDUINO_SLAVE);
     Wire.write(MasterSend);
     Wire.endTransmission();
+
+    delay(100);
         
     //génération aléatoire d'un seed grâce à la tension instable au bornes d'un pin
     randomSeed(analogRead(7));

@@ -82,7 +82,7 @@ void loop() {
     
     if (SlaveReceived == 50 && fini == false && LEDs == true) {
         lcd.setCursor(0, 0);
-        lcd.print("Temps restant :      ");
+        lcd.print("Temps restant :");
         if (depart == 0) {
             tempsDepart = millis();
             depart = 1;
@@ -102,11 +102,11 @@ void loop() {
         lcd.print(":");
         if (secondes > 9) {
             lcd.print(secondes);
-            lcd.print("                       ");
+            lcd.print("           ");
         } else {
             lcd.print(0);
             lcd.print(secondes);
-            lcd.print("                       ");
+            lcd.print("            ");
 
             
         }

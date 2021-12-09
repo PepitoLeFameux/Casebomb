@@ -82,13 +82,17 @@ int condE4(){
 }
 
 int chiffreE4() {
-    for (int i = 0; i < 5; i++) {
-        if      (combinaison[i] == 1) { return 1; }
-        else if (combinaison[i] == 2) { return 2; }
-        else if (combinaison[i] == 3) { return 3; }
-        else if (combinaison[i] == 4) { return 4; }
-        else if (combinaison[i] == 5) { return 5; }
+  
+    for (int i = 1; i < 6; i++) {
+      bool present = false;
+      
+      for (int j = 0; j < 5; j++){
+        if (combinaison[j]==i){ present = true ;}         
+      }
+      
+      if (present == false){ return i;}
     }
+    
 }
 
 

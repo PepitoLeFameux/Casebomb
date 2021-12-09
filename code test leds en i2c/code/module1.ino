@@ -36,13 +36,12 @@ void init_pins() {
 
 // permet d'associer une tension au numéro du cable branché
 int numero(float tension) {
-    if (tension < 0.4) { return 0; }
-    if (tension < 0.8) { return 5; }
-    if (tension < 1.5) { return 4; }
-    if (tension < 2.3) { return 3; }
-    if (tension < 3.0) { return 2; }
-    if (tension < 4.5) { return 1; }
-    else { return 9; }
+    if (tension > 3.0) { return 1; }
+    if (tension > 2.3) { return 2; } 
+    if (tension > 1.5) { return 3; }
+    if (tension > 0.6) { return 4; }
+    if (tension > 0.3) { return 5; }
+    else { return 0; }
 }
 
 void lcd_sur_2ligne(int pos, char msg[]) {
@@ -164,12 +163,6 @@ void button_pressed() {
             resultats[i] = numero(voltage);// assigne un numéro au port en fonction du voltage du cables qui lui est branché
         }
         
-        #if defined(DEBUG_SOLUTION)
-        lcd.setCursor(0,1);
-        for (int i = 0; i < 5; i ++) {
-            lcd.print(combinaison[i]);// affiche les résultats attendus //debug
-        }
-        #endif
         
         //place le curseur  juste après le code
         lcd.setCursor(6,1);
@@ -216,20 +209,20 @@ void Module1(int combinaison[], int llettres[], int lchiffres[], int lettres, in
 
         //affiche la bonne combinaison si debug ON
         
-//    #if defined(DEBUG_SOLUTION)
-//    lcd.setCursor(0,1);
-//      //affiche la combinaison correcte (debug)
-//      for (int i = 0; i < 5; i ++) {
-//          lcd.print(combinaison[i]);
-//      }
+    #if defined(DEBUG_SOLUTION)
+    lcd.setCursor(0,1);
+      //affiche la combinaison correcte (debug)
+      for (int i = 0; i < 5; i ++) {
+          lcd.print(combinaison[i]);
+      }
 
         //affiche "Erreurs:" si debug OFF
         
-//    #else
+    #else
     lcd.setCursor(0,1);
     lcd.print("Erreurs:");
     
-//    #endif
+    #endif
     
     unsigned long previousMillis = 0;
     unsigned long previousMillis2 = 0;
